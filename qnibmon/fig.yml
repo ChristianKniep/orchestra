@@ -1,21 +1,19 @@
 grafana:
-  #image: qnib/grafana
-  build: ../../docker-grafana/
+  image: qnib/grafana
   ports:
    - "80:80"
   links:
   - consul:consul
   environment:
   - DC_NAME=dc1
-  - ENABLE_SYSLOG=true
+  - ENABLE_SYSLOG=false
   - SERVICE_NAME=grafana
   dns: 127.0.0.1
   hostname: grafana
   privileged: true
 
 elk:
-  #image: qnib/elk
-  build: ../../docker-elk/
+  image: qnib/elk
   ports:
    - "9200:9200"
    - "8080:80"
@@ -24,7 +22,7 @@ elk:
   - logstash:logstash
   environment:
   - DC_NAME=dc1
-  - ENABLE_SYSLOG=true
+  - ENABLE_SYSLOG=false
   - SERVICE_9200_NAME=elasticsearch
   - SERVICE_80_NAME=kibana
   - SERVICE_TAGS=logstash
@@ -34,9 +32,18 @@ elk:
   - /data/elasticsearch:/var/lib/elasticsearch
   privileged: true
 
+kopf:
+  image: lmenezes/elasticsearch-kopf
+  ports:
+  - 8088:80
+  links:
+  - elk:es
+  environment:
+  - KOPF_SERVER_NAME=dockerhost
+  - KOPF_ES_SERVERS=172.17.42.1:9200
+
 logstash:
-  #image: qnib/logstash
-  build: ../../docker-logstash/
+  image: qnib/logstash
   ports:
    - "6379:6379"
    - "5514:5514"
@@ -45,7 +52,7 @@ logstash:
   - consul:consul
   environment:
   - DC_NAME=dc1
-  - ENABLE_SYSLOG=true
+  - ENABLE_SYSLOG=false
   - SERVICE_6379_NAME=redis
   - SERVICE_5500_NAME=lumberjack
   - SERVICE_5514_NAME=syslog
@@ -56,8 +63,7 @@ logstash:
 
 
 influxdb:
-  #image: qnib/influxdb
-  build: ../../docker-influxdb/
+  image: qnib/influxdb
   ports:
    - "8083:8083"
    - "8086:8086"
@@ -66,7 +72,7 @@ influxdb:
   - consul:consul
   environment:
   - DC_NAME=dc1
-  - ENABLE_SYSLOG=true
+  - ENABLE_SYSLOG=false
   - SERVICE_8083_NAME=influxdb-admin
   - SERVICE_8086_NAME=influxdb-api
   - SERVICE_2003_NAME=carbon
@@ -77,11 +83,10 @@ influxdb:
   privileged: true
 
 consul:
-  #image: qnib/consul
-  build: ../../docker-consul/
+  image: qnib/consul
   environment:
   - DC_NAME=dc1
-  - ENABLE_SYSLOG=true
+  - ENABLE_SYSLOG=false
   - RUN_SERVER=true
   ports:
    - "8500:8500"
