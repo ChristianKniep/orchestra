@@ -39,6 +39,7 @@ kopf:
   links:
   - elk:es
   environment:
+  - SERVICE_8088_NAME=es-kopf
   - KOPF_SERVER_NAME=dockerhost
   - KOPF_ES_SERVERS=172.17.42.1:9200
 
