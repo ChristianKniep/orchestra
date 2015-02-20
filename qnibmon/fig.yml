@@ -76,7 +76,7 @@ influxdb:
   - SERVICE_8083_NAME=influxdb-admin
   - SERVICE_8086_NAME=influxdb-api
   - SERVICE_2003_NAME=carbon
-  dns: 172.17.42.1
+  dns: 127.0.0.1
   hostname: influxdb
   volumes:
   - /data/influxdb/:/opt/influxdb/shared/
