@@ -44,7 +44,7 @@ kopf:
   - KOPF_ES_SERVERS=172.17.42.1:9200
 
 logstash:
-  image: qnib/logstash
+  image: qnib/ls-indexer
   ports:
    - "6379:6379"
    - "5514:5514"
@@ -57,9 +57,9 @@ logstash:
   - SERVICE_6379_NAME=redis
   - SERVICE_5500_NAME=lumberjack
   - SERVICE_5514_NAME=syslog
-  - SERVICE_TAGS=logship
+  - SERVICE_TAGS=logstash
   dns: 127.0.0.1
-  hostname: logstash
+  hostname: ls-indexer
   privileged: true
 
 
