@@ -12,11 +12,26 @@ grafana:
   hostname: grafana
   privileged: true
 
-
-elk:
-  image: qnib/elk
+elasticsearch:
+  image: qnib/elasticsearch
   ports:
    - "9200:9200"
+  links:
+  - consul:consul
+  environment:
+  - DC_NAME=dc1
+  - SERVICE_9200_NAME=elasticsearch
+  - ENABLE_SYSLOG=true
+  dns: 127.0.0.1
+  hostname: elasticsearch
+  volumes:
+  - /var/lib/elasticsearch
+  privileged: true
+
+
+elk:
+  image: qnib/elk:no_es
+  ports:
    - "8080:80"
    - "8125:8125"
   links:
@@ -25,7 +40,6 @@ elk:
   - logstash:logstash
   environment:
   - DC_NAME=dc1
-  - SERVICE_9200_NAME=elasticsearch
   - SERVICE_80_NAME=kibana
   - SERVICE_5500_NAME=lumberjack
   - SERVICE_5514_NAME=syslog
@@ -34,8 +48,6 @@ elk:
   - ENABLE_SYSLOG=true
   dns: 127.0.0.1
   hostname: elk
-  volumes:
-  - /var/lib/elasticsearch
   privileged: true
 
 kopf: 
