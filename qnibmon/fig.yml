@@ -28,11 +28,27 @@ elasticsearch:
   - /var/lib/elasticsearch
   privileged: true
 
+kibana:
+  image: qnib/kibana3
+  ports:
+   - "8080:80"
+  links:
+  - consul:consul
+  - elasticsearch:elasticsearch
+  environment:
+  - DC_NAME=dc1
+  - SERVICE_8080_NAME=nginx
+  - SERVICE_TAGS=kibana
+  - ENABLE_SYSLOG=true
+  dns: 127.0.0.1
+  hostname: kibana
+  privileged: true
+
 
 elk:
   image: qnib/elk:no_es
   ports:
-   - "8080:80"
+   #- "8080:80"
    - "8125:8125"
   links:
   - consul:consul
