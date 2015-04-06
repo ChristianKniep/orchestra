@@ -45,42 +45,51 @@ kibana:
   privileged: true
 
 
-elk:
-  image: qnib/elk:no_es
-  ports:
-   - "8125:8125"
-  links:
-  - consul:consul
-  - influxdb:influxdb
-  - logstash:logstash
-  environment:
-  - DC_NAME=dc1
-  - SERVICE_8125_NAME=statsd
-  - SERVICE_TAGS=logstash
-  - ENABLE_SYSLOG=true
-  dns: 127.0.0.1
-  hostname: elk
-  privileged: true
-
 kopf: 
   image: lmenezes/elasticsearch-kopf 
   ports: 
   - 8088:80 
   links:
-  - elk:elk
+  - elasticsearch:elasticsearch
   environment: 
   - SERVICE_8088_NAME=es-kopf
   - KOPF_SERVER_NAME=dockerhost 
   - KOPF_ES_SERVERS=172.17.42.1:9200
 
-logstash:
-  image: qnib/ls-indexer
+logout:
+  image: qnib/logout
+  links:
+  - consul:consul
+  - redis:redis
+  environment:
+  - DC_NAME=dc1
+  - ENABLE_SYSLOG=false
+  dns: 127.0.0.1
+  hostname: logout
+  privileged: true
+
+redis:
+  image: qnib/redis
   ports:
    - "6379:6379"
+  links:
+  - consul:consul
+  environment:
+  - DC_NAME=dc1
+  - SERVICE_6379_NAME=redis
+  - ENABLE_SYSLOG=true
+  dns: 127.0.0.1
+  hostname: redis
+  privileged: true
+
+login:
+  image: qnib/login
+  ports:
    - "5514:5514"
    - "5500:5500"
   links:
   - consul:consul
+  - redis:redis
   environment:
   - DC_NAME=dc1
   - ENABLE_SYSLOG=false
@@ -89,7 +98,10 @@ logstash:
   - SERVICE_5514_NAME=syslog
   - SERVICE_TAGS=logstash
   dns: 127.0.0.1
-  hostname: ls-indexer
+  volumes:
+  - /Users/kniepbert/Daten/QNIBInc/docker/docker-login/etc/default/logstash/:/etc/logstash/conf.d/
+  - /Users/kniepbert/Daten/QNIBInc/docker/docker-login/etc/grok/patterns/:/etc/grok/patterns/
+  hostname: login
   privileged: true
 
 influxdb:
@@ -106,6 +118,8 @@ influxdb:
   - SERVICE_8083_NAME=influxdb-admin
   - SERVICE_8086_NAME=influxdb-api
   - SERVICE_2003_NAME=carbon
+  volumes:
+  - /opt/influxdb/shared/data/db
   dns: 127.0.0.1
   hostname: influxdb
   privileged: true
@@ -116,11 +130,13 @@ slurmctld:
     - "6817:6817"
     links:
     - consul:consul
-    - logstash:logstash
+    - login:login
     environment:
     - DC_NAME=dc1
     - SERVICE_6817_NAME=slurmctld
     - ENABLE_SYSLOG=true
+    volumes:
+    - /tmp/chome/:/chome/
     dns: 127.0.0.1
     hostname: slurmctld
     privileged: true
@@ -130,13 +146,44 @@ slurmd:
     links:
     - consul:consul
     - slurmctld:slurmctld
-    - logstash:logstash
+    - login:login
     environment:
     - DC_NAME=dc1
     - ENABLE_SYSLOG=true
+    volumes:
+    - /tmp/chome/:/chome/
     dns: 127.0.0.1
     #hostname: slurmd
     privileged: true
+
+neo4j:
+  image: qnib/neo4j
+  hostname: neo4j
+  links:
+  - consul:consul
+  ports:
+  - 7474:7474
+  environment:
+  - DC_NAME=dc1
+  - ENABLE_SYSLOG=false
+  dns: 127.0.0.1
+  privileged: true
+
+inventory:
+  image: qnib/inventory
+  links:
+  - consul:consul
+  - neo4j:neo4j
+  environment:
+  - DC_NAME=dc1
+  - ENABLE_SYSLOG=true
+  - SERVICE_8080_NAME=inventory
+  - SERVICE_TAGS=qnib
+  dns: 127.0.0.1
+  hostname: inventory
+  volumes:
+  - /Users/kniepbert/Daten/QNIBInc/docker/docker-inventory/opt/qnib/inventory/:/opt/qnib/inventory/
+  privileged: true
 
 consul:
   image: qnib/consul
