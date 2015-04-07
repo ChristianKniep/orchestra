@@ -98,9 +98,6 @@ login:
   - SERVICE_5514_NAME=syslog
   - SERVICE_TAGS=logstash
   dns: 127.0.0.1
-  volumes:
-  - /Users/kniepbert/Daten/QNIBInc/docker/docker-login/etc/default/logstash/:/etc/logstash/conf.d/
-  - /Users/kniepbert/Daten/QNIBInc/docker/docker-login/etc/grok/patterns/:/etc/grok/patterns/
   hostname: login
   privileged: true
 
@@ -181,8 +178,6 @@ inventory:
   - SERVICE_TAGS=qnib
   dns: 127.0.0.1
   hostname: inventory
-  volumes:
-  - /Users/kniepbert/Daten/QNIBInc/docker/docker-inventory/opt/qnib/inventory/:/opt/qnib/inventory/
   privileged: true
 
 consul:
