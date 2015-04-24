@@ -162,10 +162,9 @@ slurmctld:
     environment:
     - DC_NAME=dc1
     - SERVICE_6817_NAME=slurmctld
-    - ENABLE_SYSLOG=true
+    - FORWARD_TO_LOGSTASH=true
     volumes:
     - /tmp/scratch/:/scratch/
-    - ~/Daten/QNIBInc/docker/docker-slurm/opt/qnib/bin/:/qnibbin/
     dns: 127.0.0.1
     hostname: slurmctld
     privileged: true
