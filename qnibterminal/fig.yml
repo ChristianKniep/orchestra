@@ -100,26 +100,6 @@ login:
   hostname: login
   privileged: true
 
-#influxdb:
-#  image: qnib/influxdb
-#  ports:
-#   - "8083:8083"
-#   - "8086:8086"
-#   - "2003:2003"
-#  links:
-#  - consul:consul
-#  environment:
-#  - DC_NAME=dc1
-#  - ENABLE_SYSLOG=true
-#  - SERVICE_8083_NAME=influxdb-admin
-#  - SERVICE_8086_NAME=influxdb-api
-#  - SERVICE_2003_NAME=carbon
-#  volumes:
-#  - /opt/influxdb/shared/data/db
-#  dns: 127.0.0.1
-#  hostname: influxdb
-#  privileged: true
-
 carbon:
   image: qnib/carbon
   ports:
