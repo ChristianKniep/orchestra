@@ -1,5 +1,5 @@
 grafana:
-  image: qnib/grafana:carbon
+  image: qnib/grafana
   ports:
    - "80:80"
   links:
@@ -93,7 +93,6 @@ login:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=false
-  - SERVICE_6379_NAME=redis
   - SERVICE_5500_NAME=lumberjack
   - SERVICE_5514_NAME=syslog
   - SERVICE_TAGS=logstash
