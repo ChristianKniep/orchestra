@@ -1,5 +1,5 @@
 grafana:
-  image: qnib/grafana
+  image: qnib/grafana:carbon
   ports:
    - "80:80"
   links:
@@ -8,6 +8,8 @@ grafana:
   - DC_NAME=dc1
   - ENABLE_SYSLOG=true
   - SERVICE_NAME=grafana
+  volumes:
+  - /Users/kniepbert/Daten/QNIBInc/docker/docker-grafana/var/www/grafana/app/dashboards/:/var/www/grafana/app/dashboards/
   dns: 127.0.0.1
   hostname: grafana
   privileged: true
@@ -101,25 +103,58 @@ login:
   hostname: login
   privileged: true
 
-influxdb:
-  image: qnib/influxdb
+#influxdb:
+#  image: qnib/influxdb
+#  ports:
+#   - "8083:8083"
+#   - "8086:8086"
+#   - "2003:2003"
+#  links:
+#  - consul:consul
+#  environment:
+#  - DC_NAME=dc1
+#  - ENABLE_SYSLOG=true
+#  - SERVICE_8083_NAME=influxdb-admin
+#  - SERVICE_8086_NAME=influxdb-api
+#  - SERVICE_2003_NAME=carbon
+#  volumes:
+#  - /opt/influxdb/shared/data/db
+#  dns: 127.0.0.1
+#  hostname: influxdb
+#  privileged: true
+
+carbon:
+  image: qnib/carbon
   ports:
-   - "8083:8083"
-   - "8086:8086"
    - "2003:2003"
   links:
   - consul:consul
   environment:
   - DC_NAME=dc1
   - ENABLE_SYSLOG=true
-  - SERVICE_8083_NAME=influxdb-admin
-  - SERVICE_8086_NAME=influxdb-api
-  - SERVICE_2003_NAME=carbon
   volumes:
-  - /opt/influxdb/shared/data/db
+  - /var/lib/carbon/whisper/
   dns: 127.0.0.1
-  hostname: influxdb
+  hostname: carbon
   privileged: true
+
+gapi:
+  image: qnib/graphite-api
+  ports:
+  - 8888:80
+  links:
+  - consul:consul
+  - carbon:carbon
+  environment:
+  - DC_NAME=dc1
+  - ENABLE_SYSLOG=true
+  volumes_from:
+   - carbon
+  dns: 127.0.0.1
+  hostname: graphite-api
+  privileged: true
+
+
 
 slurmctld:
     image: qnib/slurmctld
@@ -133,13 +168,15 @@ slurmctld:
     - SERVICE_6817_NAME=slurmctld
     - ENABLE_SYSLOG=true
     volumes:
-    - /tmp/chome/:/chome/
+    - /tmp/scratch/:/scratch/
+    - ~/Daten/QNIBInc/docker/docker-slurm/opt/qnib/bin/:/qnibbin/
     dns: 127.0.0.1
     hostname: slurmctld
     privileged: true
 
 slurmd:
     image: qnib/slurmd
+    mem_limit: 250000000
     links:
     - consul:consul
     - slurmctld:slurmctld
@@ -148,7 +185,7 @@ slurmd:
     - DC_NAME=dc1
     - ENABLE_SYSLOG=true
     volumes:
-    - /tmp/chome/:/chome/
+    - /tmp/scratch/:/scratch/
     dns: 127.0.0.1
     #hostname: slurmd
     privileged: true
