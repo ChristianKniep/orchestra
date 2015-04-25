@@ -56,48 +56,18 @@ kopf:
   - KOPF_SERVER_NAME=dockerhost 
   - KOPF_ES_SERVERS=172.17.42.1:9200
 
-logout:
-  image: qnib/logout
+logger:
+  image: qnib/logger
   links:
   - consul:consul
-  - redis:redis
-  environment:
-  - DC_NAME=dc1
-  - FORWARD_TO_LOGSTASH=false
-  dns: 127.0.0.1
-  hostname: logout
-  privileged: true
-
-redis:
-  image: qnib/redis
-  ports:
-   - "6379:6379"
-  links:
-  - consul:consul
-  environment:
-  - DC_NAME=dc1
-  - SERVICE_6379_NAME=redis
-  - FORWARD_TO_LOGSTASH=true
-  dns: 127.0.0.1
-  hostname: redis
-  privileged: true
-
-login:
-  image: qnib/login
   ports:
    - "5514:5514"
    - "5500:5500"
-  links:
-  - consul:consul
-  - redis:redis
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=false
-  - SERVICE_5500_NAME=lumberjack
-  - SERVICE_5514_NAME=syslog
-  - SERVICE_TAGS=logstash
   dns: 127.0.0.1
-  hostname: login
+  hostname: logger
   privileged: true
 
 carbon:
@@ -137,7 +107,7 @@ slurmctld:
     - "6817:6817"
     links:
     - consul:consul
-    - login:login
+    - logger:logger
     environment:
     - DC_NAME=dc1
     - SERVICE_6817_NAME=slurmctld
@@ -154,7 +124,7 @@ slurmd:
     links:
     - consul:consul
     - slurmctld:slurmctld
-    - login:login
+    - logger:logger
     environment:
     - DC_NAME=dc1
     - FORWARD_TO_LOGSTASH=true
