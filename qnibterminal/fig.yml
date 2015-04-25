@@ -101,39 +101,6 @@ gapi:
   hostname: graphite-api
   privileged: true
 
-slurmctld:
-    image: qnib/slurmctld
-    ports:
-    - "6817:6817"
-    links:
-    - consul:consul
-    - logger:logger
-    environment:
-    - DC_NAME=dc1
-    - SERVICE_6817_NAME=slurmctld
-    - FORWARD_TO_LOGSTASH=true
-    volumes:
-    - /tmp/scratch/:/scratch/
-    dns: 127.0.0.1
-    hostname: slurmctld
-    privileged: true
-
-slurmd:
-    image: qnib/slurmd
-    mem_limit: 250000000
-    links:
-    - consul:consul
-    - slurmctld:slurmctld
-    - logger:logger
-    environment:
-    - DC_NAME=dc1
-    - FORWARD_TO_LOGSTASH=true
-    volumes:
-    - /tmp/scratch/:/scratch/
-    dns: 127.0.0.1
-    #hostname: slurmd
-    privileged: true
-
 neo4j:
   image: qnib/neo4j
   hostname: neo4j
@@ -171,4 +138,38 @@ consul:
   dns: 127.0.0.1
   hostname: consul
   privileged: true
+
+
+slurmctld:
+    image: qnib/slurmctld
+    ports:
+    - "6817:6817"
+    links:
+    - consul:consul
+    - logger:logger
+    environment:
+    - DC_NAME=dc1
+    - SERVICE_6817_NAME=slurmctld
+    - FORWARD_TO_LOGSTASH=true
+    volumes:
+    - /tmp/scratch/:/scratch/
+    dns: 127.0.0.1
+    hostname: slurmctld
+    privileged: true
+
+slurmd:
+    image: qnib/slurmd
+    mem_limit: 250000000
+    links:
+    - consul:consul
+    - slurmctld:slurmctld
+    - logger:logger
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_LOGSTASH=true
+    volumes:
+    - /tmp/scratch/:/scratch/
+    dns: 127.0.0.1
+    #hostname: slurmd
+    privileged: true
 
