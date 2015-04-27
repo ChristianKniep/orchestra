@@ -7,7 +7,7 @@ grafana:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=true
-  - SERVICE_NAME=grafana
+  - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: grafana
   privileged: true
@@ -20,7 +20,7 @@ elasticsearch:
   - consul:consul
   environment:
   - DC_NAME=dc1
-  - SERVICE_9200_NAME=elasticsearch
+  - CNT_TYPE=service
   - FORWARD_TO_LOGSTASH=true
   dns: 127.0.0.1
   hostname: elasticsearch
@@ -37,9 +37,8 @@ kibana:
   - elasticsearch:elasticsearch
   environment:
   - DC_NAME=dc1
-  - SERVICE_8080_NAME=nginx
-  - SERVICE_TAGS=kibana
   - FORWARD_TO_LOGSTASH=true
+  - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: kibana
   privileged: true
@@ -66,6 +65,7 @@ logger:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=false
+  - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: logger
   privileged: true
@@ -79,6 +79,7 @@ carbon:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=true
+  - CNT_TYPE=service
   volumes:
   - /var/lib/carbon/whisper/
   dns: 127.0.0.1
@@ -95,6 +96,7 @@ gapi:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=true
+  - CNT_TYPE=service
   volumes_from:
    - carbon
   dns: 127.0.0.1
@@ -111,6 +113,7 @@ neo4j:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=false
+  - CNT_TYPE=service
   dns: 127.0.0.1
   privileged: true
 
@@ -122,8 +125,7 @@ inventory:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=true
-  - SERVICE_8080_NAME=inventory
-  - SERVICE_TAGS=qnib
+  - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: inventory
   privileged: true
@@ -135,6 +137,7 @@ consul:
   environment:
   - DC_NAME=dc1
   - ENABLE_SYSLOG=true
+  - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: consul
   privileged: true
@@ -151,15 +154,15 @@ slurmctld:
     - DC_NAME=dc1
     - SERVICE_6817_NAME=slurmctld
     - FORWARD_TO_LOGSTASH=true
+    - CNT_TYPE=service
     volumes:
     - /tmp/scratch/:/scratch/
     dns: 127.0.0.1
     hostname: slurmctld
     privileged: true
 
-slurmd:
-    image: qnib/slurmd
-    mem_limit: 250000000
+compute0:
+    image: qnib/compute
     links:
     - consul:consul
     - slurmctld:slurmctld
@@ -167,9 +170,73 @@ slurmd:
     environment:
     - DC_NAME=dc1
     - FORWARD_TO_LOGSTASH=true
+    - CNT_TYPE=compute
     volumes:
     - /tmp/scratch/:/scratch/
     dns: 127.0.0.1
-    #hostname: slurmd
+    hostname: compute0
+    privileged: true
+
+compute1:
+    image: qnib/compute
+    links:
+    - consul:consul
+    - slurmctld:slurmctld
+    - logger:logger
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_LOGSTASH=true
+    - CNT_TYPE=compute
+    volumes:
+    - /tmp/scratch/:/scratch/
+    dns: 127.0.0.1
+    hostname: compute1
+    privileged: true
+
+compute2:
+    image: qnib/compute
+    links:
+    - consul:consul
+    - slurmctld:slurmctld
+    - logger:logger
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_LOGSTASH=true
+    - CNT_TYPE=compute
+    volumes:
+    - /tmp/scratch/:/scratch/
+    dns: 127.0.0.1
+    hostname: compute2
+    privileged: true
+
+compute3:
+    image: qnib/compute
+    links:
+    - consul:consul
+    - slurmctld:slurmctld
+    - logger:logger
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_LOGSTASH=true
+    - CNT_TYPE=compute
+    volumes:
+    - /tmp/scratch/:/scratch/
+    dns: 127.0.0.1
+    hostname: compute3
+    privileged: true
+
+slurmd:
+    image: qnib/compute
+    links:
+    - consul:consul
+    - slurmctld:slurmctld
+    - logger:logger
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_LOGSTASH=true
+    - CNT_TYPE=compute
+    volumes:
+    - /tmp/scratch/:/scratch/
+    dns: 127.0.0.1
     privileged: true
 
