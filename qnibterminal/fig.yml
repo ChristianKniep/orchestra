@@ -8,6 +8,10 @@ grafana:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=true
   - CNT_TYPE=service
+  #volumes:
+  #- ${DOCKERDIR}/docker-grafana/opt/qnib/grafana/:/opt/qnib/grafana/
+  volumes_from: 
+  - slurmctld
   dns: 127.0.0.1
   hostname: grafana
   privileged: true
@@ -157,6 +161,8 @@ slurmctld:
     - CNT_TYPE=service
     volumes:
     - /tmp/scratch/:/scratch/
+    - /var/www/slurm/
+    #- ${DOCKERDIR}/docker-slurmctld/opt/qnib/slurm/bin/:/opt/qnib/slurm/bin/
     dns: 127.0.0.1
     hostname: slurmctld
     privileged: true
@@ -173,6 +179,7 @@ compute0:
     - CNT_TYPE=compute
     volumes:
     - /tmp/scratch/:/scratch/
+    #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
     dns: 127.0.0.1
     hostname: compute0
     privileged: true
@@ -189,6 +196,7 @@ compute1:
     - CNT_TYPE=compute
     volumes:
     - /tmp/scratch/:/scratch/
+    #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
     dns: 127.0.0.1
     hostname: compute1
     privileged: true
@@ -205,6 +213,7 @@ compute2:
     - CNT_TYPE=compute
     volumes:
     - /tmp/scratch/:/scratch/
+    #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
     dns: 127.0.0.1
     hostname: compute2
     privileged: true
@@ -221,8 +230,26 @@ compute3:
     - CNT_TYPE=compute
     volumes:
     - /tmp/scratch/:/scratch/
+    #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
     dns: 127.0.0.1
     hostname: compute3
+    privileged: true
+
+compute4:
+    image: qnib/compute
+    links:
+    - consul:consul
+    - slurmctld:slurmctld
+    - logger:logger
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_LOGSTASH=true
+    - CNT_TYPE=compute
+    volumes:
+    - /tmp/scratch/:/scratch/
+    #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
+    dns: 127.0.0.1
+    hostname: compute4
     privileged: true
 
 slurmd:
@@ -237,6 +264,7 @@ slurmd:
     - CNT_TYPE=compute
     volumes:
     - /tmp/scratch/:/scratch/
+    #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
     dns: 127.0.0.1
     privileged: true
 
