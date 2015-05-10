@@ -146,6 +146,19 @@ consul:
   hostname: consul
   privileged: true
 
+#galaxy:
+#    image: qnib/galaxy
+#    ports:
+#     - "8070:80"
+#    links:
+#    - consul:consul
+#    environment:
+#    - DC_NAME=dc1
+#    - FORWARD_TO_SYSLOG=true
+#    - CNT_TYPE=service
+#    dns: 127.0.0.1
+#    hostname: galaxy
+#    privileged: true
 
 slurmctld:
     image: qnib/slurmctld
