@@ -1,0 +1,85 @@
+consul:
+  image: qnib/consul
+  ports:
+   - "8500:8500"
+  environment:
+  - DC_NAME=dc1
+  - ENABLE_SYSLOG=true
+  - CNT_TYPE=service
+  dns: 127.0.0.1
+  hostname: consul
+  privileged: true
+
+elasticsearch:
+  image: qnib/elasticsearch
+  ports:
+   - "9200:9200"
+  links:
+  - consul:consul
+  environment:
+  - DC_NAME=dc1
+  - CNT_TYPE=service
+  - FORWARD_TO_LOGSTASH=true
+  dns: 127.0.0.1
+  hostname: elasticsearch
+  volumes:
+  - /var/lib/elasticsearch
+  privileged: true
+
+kopf: 
+  image: lmenezes/elasticsearch-kopf 
+  ports: 
+  - 8088:80 
+  links:
+  - elasticsearch:elasticsearch
+  environment: 
+  - SERVICE_8088_NAME=es-kopf
+  - KOPF_SERVER_NAME=dockerhost 
+  - KOPF_ES_SERVERS=172.17.42.1:9200
+
+logger:
+  image: qnib/logstash:trunk
+  links:
+  - consul:consul
+  ports:
+   - "5514:5514"
+   - "5500:5500"
+  environment:
+  - DC_NAME=dc1
+  - FORWARD_TO_LOGSTASH=false
+  - CNT_TYPE=service
+  volumes:
+  - ./etc/logstash/conf.d/:/etc/logstash/conf.d/
+  dns: 127.0.0.1
+  hostname: logger
+  privileged: true
+
+kibana:
+  image: qnib/kibana3
+  ports:
+   - "8080:80"
+  links:
+  - consul:consul
+  - elasticsearch:elasticsearch
+  environment:
+  - DC_NAME=dc1
+  - FORWARD_TO_LOGSTASH=true
+  - CNT_TYPE=service
+  dns: 127.0.0.1
+  hostname: kibana
+  privileged: true
+
+kibana4:
+  image: qnib/kibana4
+  ports:
+   - "5601:5601"
+  links:
+  - consul:consul
+  - elasticsearch:elasticsearch
+  environment:
+  - DC_NAME=dc1
+  - FORWARD_TO_LOGSTASH=true
+  - CNT_TYPE=service
+  dns: 127.0.0.1
+  hostname: kibana4
+
