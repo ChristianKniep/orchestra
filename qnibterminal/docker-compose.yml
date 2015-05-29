@@ -91,7 +91,55 @@ slurmctld:
     #volumes:
     #- ${DOCKERDIR}/docker-slurmctld/opt/qnib/slurm/bin/:/opt/qnib/slurm/bin/
 
-compute:
+compute0:
+    extends:
+        file: base.yml
+        service: compute
+    hostname: compute0
+    links:
+    - consul:consul
+    - slurmctld:slurmctld
+    - logger:logger
+    #volumes:
+    #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
+
+compute1:
+    extends:
+        file: base.yml
+        service: compute
+    hostname: compute1
+    links:
+    - consul:consul
+    - slurmctld:slurmctld
+    - logger:logger
+    #volumes:
+    #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
+
+compute2:
+    extends:
+        file: base.yml
+        service: compute
+    hostname: compute2
+    links:
+    - consul:consul
+    - slurmctld:slurmctld
+    - logger:logger
+    #volumes:
+    #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
+
+compute3:
+    extends:
+        file: base.yml
+        service: compute
+    hostname: compute3
+    links:
+    - consul:consul
+    - slurmctld:slurmctld
+    - logger:logger
+    #volumes:
+    #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
+
+slurmd:
     extends:
         file: base.yml
         service: compute
@@ -101,4 +149,3 @@ compute:
     - logger:logger
     #volumes:
     #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
-

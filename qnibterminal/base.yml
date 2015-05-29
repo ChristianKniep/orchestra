@@ -157,3 +157,4 @@ compute:
     - /tmp/scratch/:/scratch/
     dns: 127.0.0.1
     privileged: true
+
