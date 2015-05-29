@@ -22,6 +22,14 @@ kibana:
   - consul:consul
   - elasticsearch:elasticsearch
 
+kibana4:
+  extends:
+    file: base.yml
+    service: kibana4
+  links:
+  - consul:consul
+  - elasticsearch:elasticsearch
+
 kopf: 
   extends:
     file: base.yml

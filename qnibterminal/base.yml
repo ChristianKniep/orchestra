@@ -33,9 +33,20 @@ kibana3:
   - FORWARD_TO_LOGSTASH=true
   - CNT_TYPE=service
   dns: 127.0.0.1
-  hostname: kibana
+  hostname: kibana3
   privileged: true
 
+kibana4:
+  image: qnib/kibana4
+  ports:
+   - "5601:5601"
+  environment:
+  - DC_NAME=dc1
+  - FORWARD_TO_LOGSTASH=true
+  - CNT_TYPE=service
+  dns: 127.0.0.1
+  hostname: kibana4
+  privileged: true
 
 kopf: 
   image: lmenezes/elasticsearch-kopf 
