@@ -1,270 +1,96 @@
 grafana:
-  image: qnib/grafana
-  ports:
-   - "80:80"
-  links:
-  - consul:consul
-  environment:
-  - DC_NAME=dc1
-  - FORWARD_TO_LOGSTASH=true
-  - CNT_TYPE=service
+  extends: 
+    file: base.yml
+    service: grafana
+  volumes_from:
+  - slurmctld
   #volumes:
   #- ${DOCKERDIR}/docker-grafana/opt/qnib/grafana/:/opt/qnib/grafana/
-  volumes_from: 
-  - slurmctld
-  dns: 127.0.0.1
-  hostname: grafana
-  privileged: true
 
 elasticsearch:
-  image: qnib/elasticsearch
-  ports:
-   - "9200:9200"
+  extends:
+    file: base.yml
+    service: elasticsearch
   links:
   - consul:consul
-  environment:
-  - DC_NAME=dc1
-  - CNT_TYPE=service
-  - FORWARD_TO_LOGSTASH=true
-  dns: 127.0.0.1
-  hostname: elasticsearch
-  volumes:
-  - /var/lib/elasticsearch
-  privileged: true
 
 kibana:
-  image: qnib/kibana3
-  ports:
-   - "8080:80"
+  extends:
+    file: base.yml
+    service: kibana3
   links:
   - consul:consul
   - elasticsearch:elasticsearch
-  environment:
-  - DC_NAME=dc1
-  - FORWARD_TO_LOGSTASH=true
-  - CNT_TYPE=service
-  dns: 127.0.0.1
-  hostname: kibana
-  privileged: true
-
 
 kopf: 
-  image: lmenezes/elasticsearch-kopf 
-  ports: 
-  - 8088:80 
+  extends:
+    file: base.yml
+    service: kopf
   links:
   - elasticsearch:elasticsearch
-  environment: 
-  - SERVICE_8088_NAME=es-kopf
-  - KOPF_SERVER_NAME=dockerhost 
-  - KOPF_ES_SERVERS=172.17.42.1:9200
 
 logger:
-  image: qnib/logger
+  extends:
+    file: base.yml
+    service: logger
   links:
   - consul:consul
-  ports:
-   - "5514:5514"
-   - "5500:5500"
-  environment:
-  - DC_NAME=dc1
-  - FORWARD_TO_LOGSTASH=false
-  - CNT_TYPE=service
-  dns: 127.0.0.1
-  hostname: logger
-  privileged: true
 
 carbon:
-  image: qnib/carbon
-  ports:
-   - "2003:2003"
+  extends:
+    file: base.yml
+    service: carbon
   links:
   - consul:consul
-  environment:
-  - DC_NAME=dc1
-  - FORWARD_TO_LOGSTASH=true
-  - CNT_TYPE=service
-  volumes:
-  - /var/lib/carbon/whisper/
-  dns: 127.0.0.1
-  hostname: carbon
-  privileged: true
 
 gapi:
-  image: qnib/graphite-api
-  ports:
-  - 8888:80
+  extends:
+    file: base.yml
+    service: gapi
   links:
   - consul:consul
   - carbon:carbon
-  environment:
-  - DC_NAME=dc1
-  - FORWARD_TO_LOGSTASH=true
-  - CNT_TYPE=service
   volumes_from:
    - carbon
-  dns: 127.0.0.1
-  hostname: graphite-api
-  privileged: true
 
 neo4j:
-  image: qnib/neo4j
-  hostname: neo4j
+  extends:
+    file: base.yml
+    service: neo4j
   links:
   - consul:consul
-  ports:
-  - 7474:7474
-  environment:
-  - DC_NAME=dc1
-  - FORWARD_TO_LOGSTASH=false
-  - CNT_TYPE=service
-  dns: 127.0.0.1
-  privileged: true
 
 inventory:
-  image: qnib/inventory
+  extends:
+    file: base.yml
+    service: inventory
   links:
   - consul:consul
   - neo4j:neo4j
-  environment:
-  - DC_NAME=dc1
-  - FORWARD_TO_LOGSTASH=true
-  - CNT_TYPE=service
-  dns: 127.0.0.1
-  hostname: inventory
-  privileged: true
 
 consul:
-  image: qnib/consul
-  ports:
-   - "8500:8500"
-  environment:
-  - DC_NAME=dc1
-  - ENABLE_SYSLOG=true
-  - CNT_TYPE=service
-  dns: 127.0.0.1
-  hostname: consul
-  privileged: true
-
+  extends:
+    file: base.yml
+    service: consul
 
 slurmctld:
-    image: qnib/slurmctld
-    ports:
-    - "6817:6817"
+    extends:
+        file: base.yml
+        service: slurmctld
     links:
     - consul:consul
     - logger:logger
-    environment:
-    - DC_NAME=dc1
-    - SERVICE_6817_NAME=slurmctld
-    - FORWARD_TO_LOGSTASH=true
-    - CNT_TYPE=service
-    volumes:
-    - /tmp/scratch/:/scratch/
-    - /var/www/slurm/
+    #volumes:
     #- ${DOCKERDIR}/docker-slurmctld/opt/qnib/slurm/bin/:/opt/qnib/slurm/bin/
-    dns: 127.0.0.1
-    hostname: slurmctld
-    privileged: true
 
-compute0:
-    image: qnib/compute
+compute:
+    extends:
+        file: base.yml
+        service: compute
     links:
     - consul:consul
     - slurmctld:slurmctld
     - logger:logger
-    environment:
-    - DC_NAME=dc1
-    - FORWARD_TO_LOGSTASH=true
-    - CNT_TYPE=compute
-    volumes:
-    - /tmp/scratch/:/scratch/
+    #volumes:
     #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
-    dns: 127.0.0.1
-    hostname: compute0
-    privileged: true
-
-compute1:
-    image: qnib/compute
-    links:
-    - consul:consul
-    - slurmctld:slurmctld
-    - logger:logger
-    environment:
-    - DC_NAME=dc1
-    - FORWARD_TO_LOGSTASH=true
-    - CNT_TYPE=compute
-    volumes:
-    - /tmp/scratch/:/scratch/
-    #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
-    dns: 127.0.0.1
-    hostname: compute1
-    privileged: true
-
-compute2:
-    image: qnib/compute
-    links:
-    - consul:consul
-    - slurmctld:slurmctld
-    - logger:logger
-    environment:
-    - DC_NAME=dc1
-    - FORWARD_TO_LOGSTASH=true
-    - CNT_TYPE=compute
-    volumes:
-    - /tmp/scratch/:/scratch/
-    #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
-    dns: 127.0.0.1
-    hostname: compute2
-    privileged: true
-
-compute3:
-    image: qnib/compute
-    links:
-    - consul:consul
-    - slurmctld:slurmctld
-    - logger:logger
-    environment:
-    - DC_NAME=dc1
-    - FORWARD_TO_LOGSTASH=true
-    - CNT_TYPE=compute
-    volumes:
-    - /tmp/scratch/:/scratch/
-    #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
-    dns: 127.0.0.1
-    hostname: compute3
-    privileged: true
-
-compute4:
-    image: qnib/compute
-    links:
-    - consul:consul
-    - slurmctld:slurmctld
-    - logger:logger
-    environment:
-    - DC_NAME=dc1
-    - FORWARD_TO_LOGSTASH=true
-    - CNT_TYPE=compute
-    volumes:
-    - /tmp/scratch/:/scratch/
-    #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
-    dns: 127.0.0.1
-    hostname: compute4
-    privileged: true
-
-slurmd:
-    image: qnib/compute
-    links:
-    - consul:consul
-    - slurmctld:slurmctld
-    - logger:logger
-    environment:
-    - DC_NAME=dc1
-    - FORWARD_TO_LOGSTASH=true
-    - CNT_TYPE=compute
-    volumes:
-    - /tmp/scratch/:/scratch/
-    #- ${DOCKERDIR}/docker-compute/opt/qnib/jobscripts/:/opt/qnib/jobscripts/
-    dns: 127.0.0.1
-    privileged: true
 
