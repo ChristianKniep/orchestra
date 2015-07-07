@@ -2,17 +2,12 @@ slurmctld:
     image: qnib/slurmctld
     ports:
     - "6817:6817"
-    links:
-    - consul:consul
     dns: 127.0.0.1
     hostname: slurmctld
     privileged: true
 
 slurmd:
     image: qnib/slurmd
-    links:
-    - consul:consul
-    - slurmctld:slurmctld
     volumes:
     - /tmp/chome/:/chome/
     dns: 127.0.0.1

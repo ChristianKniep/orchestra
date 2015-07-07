@@ -1,14 +1,19 @@
 consul:
     extends:
-        file: ../base/base.yml
+        file: ../consul/base.yml
         service: consul
 
 slurmctld:
     extends:
         file: slurm.yml
         service: slurmctld
+    links:
+    - consul:consul
 
 slurmd:
     extends:
         file: slurm.yml
         service: slurmd
+    links:
+    - consul:consul
+    - slurmctld:slurmctld
