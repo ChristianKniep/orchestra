@@ -1,0 +1,12 @@
+consul:
+    extends:
+        file: base.yml
+        service: consul
+
+terminal:
+    image: qnib/terminal
+    dns: 127.0.0.1
+    hostname: terminal
+    privileged: true
+    links:
+    - consul:consul
