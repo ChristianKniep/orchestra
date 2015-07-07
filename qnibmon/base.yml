@@ -1,0 +1,110 @@
+grafana:
+  image: qnib/grafana
+  ports:
+   - "80:80"
+  environment:
+  - DC_NAME=dc1
+  - FORWARD_TO_LOGSTASH=true
+  - CNT_TYPE=service
+  dns: 127.0.0.1
+  hostname: grafana
+  privileged: true
+
+elasticsearch:
+  image: qnib/elasticsearch
+  ports:
+   - "9200:9200"
+  environment:
+  - DC_NAME=dc1
+  - CNT_TYPE=service
+  - FORWARD_TO_LOGSTASH=true
+  dns: 127.0.0.1
+  hostname: elasticsearch
+  volumes:
+  - /var/lib/elasticsearch
+  privileged: true
+
+kibana3:
+  image: qnib/kibana3
+  ports:
+   - "8080:80"
+  environment:
+  - DC_NAME=dc1
+  - FORWARD_TO_LOGSTASH=true
+  - CNT_TYPE=service
+  dns: 127.0.0.1
+  hostname: kibana3
+  privileged: true
+
+kibana4:
+  image: qnib/kibana4
+  ports:
+   - "5601:5601"
+  environment:
+  - DC_NAME=dc1
+  - FORWARD_TO_LOGSTASH=true
+  - CNT_TYPE=service
+  dns: 127.0.0.1
+  hostname: kibana4
+  privileged: true
+
+kopf: 
+  image: lmenezes/elasticsearch-kopf 
+  ports: 
+  - 8088:80 
+  environment: 
+  - SERVICE_8088_NAME=es-kopf
+  - KOPF_SERVER_NAME=dockerhost 
+  - KOPF_ES_SERVERS=172.17.42.1:9200
+
+logger:
+  image: qnib/logger
+  ports:
+   - "5514:5514"
+   - "5500:5500"
+  environment:
+  - DC_NAME=dc1
+  - FORWARD_TO_LOGSTASH=false
+  - CNT_TYPE=service
+  dns: 127.0.0.1
+  hostname: logger
+  privileged: true
+
+carbon:
+  image: qnib/carbon
+  ports:
+   - "2003:2003"
+  environment:
+  - DC_NAME=dc1
+  - FORWARD_TO_LOGSTASH=true
+  - CNT_TYPE=service
+  volumes:
+  - /var/lib/carbon/whisper/
+  dns: 127.0.0.1
+  hostname: carbon
+  privileged: true
+
+gapi:
+  image: qnib/graphite-api
+  ports:
+  - 8888:80
+  environment:
+  - DC_NAME=dc1
+  - FORWARD_TO_LOGSTASH=true
+  - CNT_TYPE=service
+  dns: 127.0.0.1
+  hostname: graphite-api
+  privileged: true
+
+consul:
+  image: qnib/consul
+  ports:
+   - "8500:8500"
+  environment:
+  - DC_NAME=dc1
+  - ENABLE_SYSLOG=true
+  - CNT_TYPE=service
+  dns: 127.0.0.1
+  hostname: consul
+  privileged: true
+

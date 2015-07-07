@@ -1,0 +1,64 @@
+grafana:
+  extends: 
+    file: base.yml
+    service: grafana
+
+elasticsearch:
+  extends:
+    file: base.yml
+    service: elasticsearch
+  links:
+  - consul:consul
+
+kibana:
+  extends:
+    file: base.yml
+    service: kibana3
+  links:
+  - consul:consul
+  - elasticsearch:elasticsearch
+
+kibana4:
+  extends:
+    file: base.yml
+    service: kibana4
+  links:
+  - consul:consul
+  - elasticsearch:elasticsearch
+
+kopf: 
+  extends:
+    file: base.yml
+    service: kopf
+  links:
+  - elasticsearch:elasticsearch
+
+logger:
+  extends:
+    file: base.yml
+    service: logger
+  links:
+  - consul:consul
+
+carbon:
+  extends:
+    file: base.yml
+    service: carbon
+  links:
+  - consul:consul
+
+gapi:
+  extends:
+    file: base.yml
+    service: gapi
+  links:
+  - consul:consul
+  - carbon:carbon
+  volumes_from:
+   - carbon
+
+consul:
+  extends:
+    file: base.yml
+    service: consul
+
