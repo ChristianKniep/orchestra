@@ -1,6 +1,6 @@
 consul:
     extends:
-        file: ../consul/base.yml
+        file: ../consul/docker-compose.yml
         service: consul
 
 slurmctld:
