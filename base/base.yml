@@ -1,0 +1,7 @@
+consul:
+    image: qnib/consul
+    ports:
+     - "8500:8500"
+    dns: 127.0.0.1
+    hostname: consul
+    privileged: true
