@@ -2,14 +2,14 @@ consul:
     image: qnib/consul
     ports:
      - "8500:8500"
-    dns: 127.0.0.1
     hostname: consul
+    dns: 127.0.0.1
     privileged: true
 
 terminal:
     image: qnib/terminal
+    links:
+    - consul:consul
     dns: 127.0.0.1
     hostname: terminal
     privileged: true
-    links:
-    - consul:consul
