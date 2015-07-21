@@ -61,7 +61,6 @@ logger:
   image: qnib/logger
   ports:
    - "5514:5514"
-   - "5500:5500"
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=false

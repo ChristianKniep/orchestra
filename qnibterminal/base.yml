@@ -58,7 +58,7 @@ kopf:
   - KOPF_ES_SERVERS=172.17.42.1:9200
 
 logger:
-  image: qnib/logger
+  image: qnib/logger:zmq
   ports:
    - "5514:5514"
    - "5500:5500"
