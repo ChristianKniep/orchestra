@@ -62,3 +62,11 @@ consul:
     file: base.yml
     service: consul
 
+kafka:
+  extends:
+    file: base.yml
+    service: kafka
+  links:
+  - consul:consul
+  
+

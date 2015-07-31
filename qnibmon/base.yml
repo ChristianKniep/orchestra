@@ -115,3 +115,14 @@ consul:
   hostname: consul
   privileged: true
 
+kafka:
+    hostname: kafka
+    dns: 127.0.0.1
+    image: qnib/kafka
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_KAFKA=true
+    - FORWARD_TO_LOGSTASH=true
+    ports:
+    - 2181:2181
+    privileged: true
