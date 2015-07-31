@@ -1,0 +1,22 @@
+consul:
+    image: qnib/consul
+    ports:
+     - "8500:8500"
+    hostname: consul
+    dns: 127.0.0.1
+    privileged: true
+
+lb:
+    build: lb
+    ports:
+     - "8000:80"
+    links:
+    - consul:consul
+    dns: 127.0.0.1
+    hostname: loadbalancer
+
+www:
+    build: www
+    links:
+    - consul:consul
+    dns: 127.0.0.1
