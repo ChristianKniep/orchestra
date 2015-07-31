@@ -5,6 +5,7 @@ grafana:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=true
+  - COLLECT_METRICS=true
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: grafana
@@ -18,6 +19,7 @@ elasticsearch:
   - DC_NAME=dc1
   - CNT_TYPE=service
   - FORWARD_TO_LOGSTASH=true
+  - COLLECT_METRICS=true
   dns: 127.0.0.1
   hostname: elasticsearch
   volumes:
@@ -31,6 +33,7 @@ kibana3:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=true
+  - COLLECT_METRICS=true
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: kibana3
@@ -43,6 +46,7 @@ kibana4:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=true
+  - COLLECT_METRICS=true
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: kibana4
@@ -64,6 +68,7 @@ logger:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=false
+  - COLLECT_METRICS=true
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: logger
@@ -76,6 +81,7 @@ carbon:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=true
+  - COLLECT_METRICS=true
   - CNT_TYPE=service
   volumes:
   - /var/lib/carbon/whisper/
@@ -90,6 +96,7 @@ gapi:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=true
+  - COLLECT_METRICS=true
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: graphite-api
@@ -102,6 +109,7 @@ consul:
   environment:
   - DC_NAME=dc1
   - ENABLE_SYSLOG=true
+  - COLLECT_METRICS=true
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: consul
