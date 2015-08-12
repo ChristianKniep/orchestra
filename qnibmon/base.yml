@@ -13,11 +13,10 @@ grafana:
 
 elasticsearch:
   image: qnib/elasticsearch
-  ports:
-   - "9200:9200"
   environment:
   - DC_NAME=dc1
   - CNT_TYPE=service
+  - ES_CLUSTER_NAME=gaikai
   - FORWARD_TO_LOGSTASH=true
   - COLLECT_METRICS=true
   dns: 127.0.0.1
@@ -59,7 +58,7 @@ kopf:
   environment: 
   - SERVICE_8088_NAME=es-kopf
   - KOPF_SERVER_NAME=dockerhost 
-  - KOPF_ES_SERVERS=172.17.42.1:9200
+  - KOPF_ES_SERVERS=172.17.42.1:9200,172.17.42.1:9201
 
 logger:
   image: qnib/logger
