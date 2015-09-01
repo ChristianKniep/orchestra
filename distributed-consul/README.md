@@ -244,6 +244,7 @@ OK, after the setup is done, lets add a web server to the vm1 DC and see how thi
 $ cat base.ml
 es:
    image: qnib/elasticsearch
+   dns: 127.0.0.1
    ports:
     - "9200:9200/tcp"
     - "9200:9200/udp"
