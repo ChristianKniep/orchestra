@@ -12,7 +12,7 @@ registrator:
     extends:
         file: base.yml
         service: registrator
-    command: consul://172.17.42.1:8500 --ip 192.168.99.100
+    command: -ip 192.168.99.100 consul://172.17.42.1:8500
 
 vmConsul:
     extends:

@@ -11,6 +11,7 @@ The goal of this setup is to provide a docker-host neutral way of setting up QNI
 
 The blue consul containers expose all consul-ports with the host. The `SERVICE_` environment is registrator notation, just to explain what's what.
 The last two variables let consul start as a server and use the DC `dc1`.
+
 ```
 $ cat base.yml
 consul:
@@ -34,6 +35,7 @@ consul:
     - DC_NAME=dc1
 ```
 The individual  config provides hostnames, let the first node bootstrap consul and link the second to the first.
+
 ```
 $ cat node1.yml
 consul:
@@ -44,7 +46,6 @@ consul:
     environment:
     - ADDV_ADDR=192.168.99.100
     - BOOTSTRAP_CONSUL=true
-
 $ cat node2.yml
 consul:
     extends:
@@ -57,6 +58,7 @@ consul:
 ```
 
 By starting both, they appear in both consul http api.
+
 ```
 node1$ compose -f node1.yml up -d consul
 Creating distributedconsul_consul_1...
@@ -87,6 +89,7 @@ node2$
 
 OK, now that the base is set up let's start the consul agents serving as internal DC-server.
 Config:
+
 ```
 $ cat base.yml
 vmConsul:
@@ -107,7 +110,8 @@ vmConsul:
     environment:
      - DC_NAME=vm1
 ```
-And fire 'em up
+And fire 'em up...
+
 ```
 node1$ compose -f node1.yml up -d vmConsul
 Creating distributedconsul_vmConsul_1...
@@ -119,6 +123,7 @@ Now both base-consul WebUI show the local DC `vm1` & `vm2`.
 ![](pics/dc_choice.png)
 
 The wan members are fine:
+
 ```
 [root@consul1 /]# consul members -wan
 Node           Address              Status  Type    Build  Protocol  DC
@@ -135,6 +140,7 @@ vmConsul2.vm2  172.17.0.11:8302     alive   server  0.5.2  2         vm2
 
 ## Registrator
 To automatically register services from the internal dc to the global I use `registrator `.
+
 ```
 $ cat base.ml 
 registrator:
@@ -147,14 +153,16 @@ registrator:
     extends:
         file: base.yml
         service: registrator
-    command: consul://172.17.42.1:8500 -ip 192.168.99.100 # .101 for node2.yml
+    command: -ip 192.168.99.100 consul://172.17.42.1:8500 # .101 for node2.yml
  ```
  The registrator will add the services to the global consul agent, as specified earlier.
+ 
  ```
  node1$ compose -f node1.yml up -d registrator
 Recreating distributedconsul_registrator_1...
 node1$ docker logs distributedconsul_registrator_1
 2015/09/01 09:35:26 Starting registrator v6 ...
+2015/09/01 09:35:26 Forcing host IP to 192.168.99.100
 2015/09/01 09:35:26 consul: current leader  192.168.99.100:8300
 2015/09/01 09:35:26 Using consul adapter: consul://172.17.42.1:8500
 2015/09/01 09:35:26 Listening for Docker events ...
@@ -173,6 +181,7 @@ node1$ docker logs distributedconsul_registrator_1
 
 ### consul monitor
 So far, all consul logs seem nicely shaped:
+
 ```
 [root@consul1 /]# consul monitor
 2015/09/01 11:51:57 [INFO] serf: EventMemberJoin: consul1 192.168.99.100
@@ -210,6 +219,7 @@ So far, all consul logs seem nicely shaped:
 2015/09/01 11:52:31 [INFO] agent.rpc: Accepted client: 127.0.0.1:59921
 ```
 Second base consul...
+
 ```
 [root@consul2 /]# consul monitor
 2015/09/01 11:52:01 [INFO] serf: EventMemberJoin: consul2 192.168.99.101
@@ -271,6 +281,7 @@ es:
 So far everything is setup and the logs are clean as... something that is clean...
 
 The trouble comes if I want to use the local DNS on all machines.
+
 ```
 [root@consul2 /]# consul monitor
 2015/09/01 12:19:08 [INFO] serf: EventMemberJoin: consul2 192.168.99.101
@@ -293,8 +304,25 @@ The trouble comes if I want to use the local DNS on all machines.
 ```
 The agents somehow start seeing each other and they are getting confused.
 
-## Iteration 1
+## Workaround 09/2015
 
 When I only use the DNS server within the internal clusters, it might be alright. 
-Thing is, that consul advertises the local docker-IP of either the internal service container, or the base consul.
-Both should advertise the eth0 IP... :(
+
+- Only the internal service nodes using the local DNS server
+- I missed the order in registrators config, so `-ip` was ignored, what gave me the internal IP
+By doing so I can query `elasticsearch.service.dc1.consul` and I get the external IP addresses of the service across the cluster.
+
+```
+[root@es2 /]# dig +short SRV elasticsearch.service.dc1.consul
+1 1 9200 consul2.node.dc1.consul.
+1 1 9200 consul1.node.dc1.consul.
+[root@es2 /]# dig +short A elasticsearch.service.dc1.consul
+192.168.99.100
+192.168.99.101
+```
+
+If I want to stay within my own DC, I get the interal IPs.
+```
+[root@es2 /]# dig +short A elasticsearch.service.consul
+172.17.0.16
+```
