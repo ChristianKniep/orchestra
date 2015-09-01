@@ -37,7 +37,7 @@ vmConsul:
     - RUN_SERVER=true
  
 es:
-   image: qnib/elasticsearch
+   image: qnib/es-kopf
    dns: 127.0.0.1
    ports:
     - "9200:9200/tcp"
