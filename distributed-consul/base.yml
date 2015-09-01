@@ -1,11 +1,6 @@
-base:
-   dns: 127.0.0.1
-   dns_search:
-    - node.consul
-    - service.consul
-
 consul:
    image: qnib/consul
+   #dns: 127.0.0.1
    ports:
     - "8500:8500"
     - "8400:8400"
@@ -20,14 +15,38 @@ consul:
     - SERVICE_8302_NAME=consul-wan
     - SERVICE_8301_NAME=consul-lan
     - SERVICE_8300_NAME=consul-srv-rpc
+    - BOOTSTRAP_CONSUL=false
     - RUN_SERVER=true
     - DC_NAME=dc1
+
+registrator:
+   image: gliderlabs/registrator:latest
+   hostname: registrator
+   volumes:
+    - /var/run/docker.sock:/tmp/docker.sock
    
 vmConsul:
    image: qnib/consul
+   #dns: 127.0.0.1
+   ports:
+    - "18500:8500"
    environment:
+    - SERVICE_8500_IGNORE=yes
     - WAN_SERVER=172.17.42.1
     - BOOTSTRAP_CONSUL=true
     - RUN_SERVER=true
  
-
+es:
+   image: qnib/elasticsearch
+   dns: 127.0.0.1
+   ports:
+    - "9200:9200/tcp"
+    - "9200:9200/udp"
+    - "9300:9300/tcp"
+    - "9300:9300/udp"
+   environment:
+    - SERVICE_9200_NAME=elasticsearch
+    - SERVICE_9300_NAME=es-transport
+    - RUN_SERVER=false
+    - BOOTSTRAP_CONSUL=false
+    
