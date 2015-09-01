@@ -1,0 +1,18 @@
+consul:
+    extends:
+        file: base.yml
+        service: consul
+    hostname: consul2
+    environment:
+    - ADDV_ADDR=192.168.99.101
+    - LINKED_SERVER=192.168.99.100
+    - NODE_NAME=mbp
+
+vmConsul:
+    extends:
+        file: base.yml
+        service: vmConsul
+    hostname: vmConsul2
+    environment:
+     - DC_NAME=vm2
+    

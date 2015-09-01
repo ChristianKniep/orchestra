@@ -1,0 +1,18 @@
+consul:
+    extends:
+        file: base.yml
+        service: consul
+    hostname: consul1
+    environment:
+    - ADDV_ADDR=192.168.99.100
+    - NODE_NAME=dev
+    - BOOTSTRAP_CONSUL=true
+
+vmConsul:
+    extends:
+        file: base.yml
+        service: vmConsul
+    hostname: vmConsul1
+    environment:
+     - DC_NAME=vm1
+    
