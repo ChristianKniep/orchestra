@@ -5,6 +5,7 @@ grafana:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=true
+  - COLLECT_METRICS=true
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: grafana
@@ -12,12 +13,12 @@ grafana:
 
 elasticsearch:
   image: qnib/elasticsearch
-  ports:
-   - "9200:9200"
   environment:
   - DC_NAME=dc1
   - CNT_TYPE=service
+  - ES_CLUSTER_NAME=gaikai
   - FORWARD_TO_LOGSTASH=true
+  - COLLECT_METRICS=true
   dns: 127.0.0.1
   hostname: elasticsearch
   volumes:
@@ -31,6 +32,7 @@ kibana3:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=true
+  - COLLECT_METRICS=true
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: kibana3
@@ -43,6 +45,7 @@ kibana4:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=true
+  - COLLECT_METRICS=true
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: kibana4
@@ -55,7 +58,7 @@ kopf:
   environment: 
   - SERVICE_8088_NAME=es-kopf
   - KOPF_SERVER_NAME=dockerhost 
-  - KOPF_ES_SERVERS=172.17.42.1:9200
+  - KOPF_ES_SERVERS=172.17.42.1:9200,172.17.42.1:9201
 
 logger:
   image: qnib/logger
@@ -64,6 +67,7 @@ logger:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=false
+  - COLLECT_METRICS=true
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: logger
@@ -76,6 +80,7 @@ carbon:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=true
+  - COLLECT_METRICS=true
   - CNT_TYPE=service
   volumes:
   - /var/lib/carbon/whisper/
@@ -90,6 +95,7 @@ gapi:
   environment:
   - DC_NAME=dc1
   - FORWARD_TO_LOGSTASH=true
+  - COLLECT_METRICS=true
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: graphite-api
@@ -102,8 +108,20 @@ consul:
   environment:
   - DC_NAME=dc1
   - ENABLE_SYSLOG=true
+  - COLLECT_METRICS=true
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: consul
   privileged: true
 
+kafka:
+    hostname: kafka
+    dns: 127.0.0.1
+    image: qnib/kafka
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_KAFKA=true
+    - FORWARD_TO_LOGSTASH=true
+    ports:
+    - 2181:2181
+    privileged: true

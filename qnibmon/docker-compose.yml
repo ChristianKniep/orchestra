@@ -3,12 +3,45 @@ grafana:
     file: base.yml
     service: grafana
 
-elasticsearch:
+#elasticsearch:
+#  extends:
+#    file: base.yml
+#    service: elasticsearch
+#  links:
+#  - consul:consul
+
+esm0:
+  extends:
+    file: base.yml
+    service: elasticsearch
+  hostname: esm0
+  links:
+  - consul:consul
+  ports:
+  - "9200:9200"
+  environment:
+  - ES_DATA_NODE=false
+
+esm1:
+  extends:
+    file: base.yml
+    service: elasticsearch
+  ports:
+  - "9201:9200"
+  hostname: esm1
+  links:
+  - consul:consul
+  environment:
+  - ES_DATA_NODE=false
+
+esd:
   extends:
     file: base.yml
     service: elasticsearch
   links:
   - consul:consul
+  environment:
+  - ES_MASTER_NODE=false
 
 kibana:
   extends:
@@ -16,7 +49,7 @@ kibana:
     service: kibana3
   links:
   - consul:consul
-  - elasticsearch:elasticsearch
+  - esm0:esm0
 
 kibana4:
   extends:
@@ -24,14 +57,12 @@ kibana4:
     service: kibana4
   links:
   - consul:consul
-  - elasticsearch:elasticsearch
+  - esm0:esm0
 
 kopf: 
   extends:
     file: base.yml
     service: kopf
-  links:
-  - elasticsearch:elasticsearch
 
 logger:
   extends:
@@ -61,4 +92,12 @@ consul:
   extends:
     file: base.yml
     service: consul
+
+kafka:
+  extends:
+    file: base.yml
+    service: kafka
+  links:
+  - consul:consul
+  
 
