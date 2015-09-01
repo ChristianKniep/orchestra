@@ -5,8 +5,14 @@ consul:
     hostname: consul2
     environment:
     - ADDV_ADDR=192.168.99.101
+    - CONSUL_ADDV_ADDR_WAN=192.168.99.101
     - LINKED_SERVER=192.168.99.100
-    - NODE_NAME=mbp
+
+registrator:
+    extends:
+        file: base.yml
+        service: registrator
+    command: consul://172.17.42.1:8500 -ip 192.168.99.101
 
 vmConsul:
     extends:
@@ -16,3 +22,12 @@ vmConsul:
     environment:
      - DC_NAME=vm2
     
+es:
+    extends:
+        file: base.yml
+        service: es
+    hostname: es2
+    environment:
+     - DC_NAME=vm2
+    links:
+     - vmConsul:consul
