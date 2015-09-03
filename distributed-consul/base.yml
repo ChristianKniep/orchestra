@@ -36,17 +36,32 @@ vmConsul:
     - BOOTSTRAP_CONSUL=true
     - RUN_SERVER=true
  
-es:
-   image: qnib/es-kopf
-   dns: 127.0.0.1
-   ports:
-    - "9200:9200/tcp"
-    - "9200:9200/udp"
-    - "9300:9300/tcp"
-    - "9300:9300/udp"
-   environment:
-    - SERVICE_9200_NAME=elasticsearch
-    - SERVICE_9300_NAME=es-transport
-    - RUN_SERVER=false
-    - BOOTSTRAP_CONSUL=false
-    
+zookeeper:
+    hostname: zookeeper
+    dns: 127.0.0.1
+    image: qnib/zookeeper:dev
+    ports:
+    - 2181:2181
+    - 2888:2888
+    - 3888:3888
+    environment:
+    - ZK_DC=dc1
+    - SERVICE_2181_NAME=zookeeper
+    - SERVICE_2888_NAME=zookeeper-peerport
+    - SERVICE_3888_NAME=zookeeper-leaderport
+    volumes:
+    - /srv/data/zookeeper/:/tmp/zookeeper/
+    privileged: true
+
+zkui:
+    hostname: zkui
+    dns: 127.0.0.1
+    dns_search:
+    - node.consul
+    - service.consul
+    image: qnib/zkui
+    ports:
+    - 9090:9090
+    environment:
+    - ZK_DC=dc1
+    privileged: true
