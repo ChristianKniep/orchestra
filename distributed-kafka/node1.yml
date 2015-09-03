@@ -56,3 +56,11 @@ kafka:
      - DC_NAME=vm1
      - BROKER_ID=1
      - KAFKA_HOST=192.168.99.100
+
+kafkaMon:
+    extends:
+      file: base.yml
+      service: kafkaMon
+    links:
+    - consul:consul
+    - kafka:kafka
