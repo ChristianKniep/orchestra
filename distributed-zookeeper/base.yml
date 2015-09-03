@@ -1,0 +1,67 @@
+consul:
+   image: qnib/consul
+   #dns: 127.0.0.1
+   ports:
+    - "8500:8500"
+    - "8400:8400"
+    - "8302:8302/tcp"
+    - "8302:8302/udp"
+    - "8301:8301/tcp"
+    - "8301:8301/udp"
+    - "8300:8300"
+   environment:
+    - SERVICE_8500_NAME=consul-api
+    - SERVICE_8400_NAME=consul-cli-rcp
+    - SERVICE_8302_NAME=consul-wan
+    - SERVICE_8301_NAME=consul-lan
+    - SERVICE_8300_NAME=consul-srv-rpc
+    - BOOTSTRAP_CONSUL=false
+    - RUN_SERVER=true
+    - DC_NAME=dc1
+
+registrator:
+   image: gliderlabs/registrator:latest
+   hostname: registrator
+   volumes:
+    - /var/run/docker.sock:/tmp/docker.sock
+   
+vmConsul:
+   image: qnib/consul
+   #dns: 127.0.0.1
+   ports:
+    - "18500:8500"
+   environment:
+    - SERVICE_8500_IGNORE=yes
+    - WAN_SERVER=172.17.42.1
+    - BOOTSTRAP_CONSUL=true
+    - RUN_SERVER=true
+ 
+zookeeper:
+    hostname: zookeeper
+    dns: 127.0.0.1
+    image: qnib/zookeeper:dev
+    ports:
+    - 2181:2181
+    - 2888:2888
+    - 3888:3888
+    environment:
+    - ZK_DC=dc1
+    - SERVICE_2181_NAME=zookeeper
+    - SERVICE_2888_NAME=zookeeper-peerport
+    - SERVICE_3888_NAME=zookeeper-leaderport
+    volumes:
+    - /srv/data/zookeeper/:/tmp/zookeeper/
+    privileged: true
+
+zkui:
+    hostname: zkui
+    dns: 127.0.0.1
+    dns_search:
+    - node.consul
+    - service.consul
+    image: qnib/zkui
+    ports:
+    - 9090:9090
+    environment:
+    - ZK_DC=dc1
+    privileged: true

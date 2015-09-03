@@ -1,0 +1,45 @@
+consul:
+    extends:
+        file: base.yml
+        service: consul
+    hostname: consul2
+    environment:
+    - ADDV_ADDR=192.168.99.101
+    - CONSUL_ADDV_ADDR_WAN=192.168.99.101
+    - LINKED_SERVER=192.168.99.100
+
+registrator:
+    extends:
+        file: base.yml
+        service: registrator
+    command: -ip 192.168.99.101 consul://172.17.42.1:8500
+
+vmConsul:
+    extends:
+        file: base.yml
+        service: vmConsul
+    hostname: vmConsul2
+    environment:
+     - DC_NAME=vm2
+    
+zookeeper:
+    extends:
+        file: base.yml
+        service: zookeeper
+    hostname: zookeeper2
+    environment:
+     - DC_NAME=vm2
+     - MYID=2
+     - ZK_ADDV_ADDR=192.168.99.101
+    links:
+     - vmConsul:consul
+
+#zkui:
+#    extends:
+#        file: base.yml
+#        service: zkui
+#    hostname: zkui2
+#    environment:
+#     - DC_NAME=vm2
+#    links:
+#     - vmConsul:consul
