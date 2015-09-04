@@ -61,6 +61,21 @@ kafkaMon:
     extends:
       file: base.yml
       service: kafkaMon
+    hostname: kafka-monitor1
+    environment:
+     - DC_NAME=vm1
     links:
-    - consul:consul
+    - vmConsul:consul
     - kafka:kafka
+
+kafkaMgr:
+    extends:
+      file: base.yml
+      service: kafkaMgr
+    hostname: kafka-manager1
+    environment:
+     - DC_NAME=vm1
+    links:
+    - vmConsul:consul
+    - kafka:kafka
+
