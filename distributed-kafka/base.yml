@@ -74,14 +74,15 @@ kafka:
     image: qnib/kafka
     ports:
     - 9092:9092
+    - 54299:54299
     environment:
     - FORWARD_TO_KAFKA=true
     - SERVICE_9092_NAME=kafka
+    - SERVICE_54299_NAME=jmxremote
     - ZK_DC=dc1
     privileged: true
 
 kafkaMon:
-    hostname: kafka-monitor
     dns: 127.0.0.1
     dns_search:
     - node.consul
@@ -90,6 +91,23 @@ kafkaMon:
     environment:
     - DC_NAME=dc1
     - FORWARD_TO_KAFKA=true
+    - RUN_SERVER=false
+    - BOOTSTRAP_CONSUL=false
     ports:
     - 8080:8080
+    privileged: true
+
+kafkaMgr:
+    dns: 127.0.0.1
+    dns_search:
+    - node.consul
+    - service.consul
+    image: qnib/kafka-manager
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_KAFKA=true
+    - RUN_SERVER=false
+    - BOOTSTRAP_CONSUL=false
+    ports:
+    - 9000:9000
     privileged: true
