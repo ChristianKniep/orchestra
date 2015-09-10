@@ -1,0 +1,174 @@
+consul:
+    hostname: consul
+    image: qnib/consul
+    environment:
+    - DC_NAME=dc1
+    ports:
+    - "8500:8500"
+    dns: 127.0.0.1
+
+elasticsearch:
+    extends:
+       file: base.yml
+       service: elasticsearch
+    ports:
+    - "9200:9200"
+    links:
+       - consul:consul
+
+logger:
+  extends:
+    file: base.yml
+    service: logger
+  links:
+  - consul:consul
+
+zkui:
+    hostname: zkui
+    dns: 127.0.0.1
+    dns_search:
+    - node.consul
+    - service.consul
+    image: qnib/zkui
+    environment:
+    - DC_NAME=dc1
+    links:
+    - consul:consul
+    ports:
+    - 9090:9090
+    privileged: true
+
+zookeeper:
+    hostname: zookeeper
+    dns: 127.0.0.1
+    dns_search:
+    - node.consul
+    - service.consul
+    image: qnib/zookeeper
+    environment:
+    - DC_NAME=dc1
+    links:
+    - consul:consul
+    privileged: true
+
+kafkaMonitor:
+    image: qnib/kafka-monitor
+    hostname: kafka-monitor
+    dns: 127.0.0.1
+    dns_search:
+    - node.consul
+    - service.consul
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_KAFKA=false
+    links:
+    - consul:consul
+    - kafka0:kafka
+    ports:
+    - 8080:8080
+    privileged: true
+
+kafkaMgr:
+    image: qnib/kafka-manager
+    hostname: kafka-manager
+    dns: 127.0.0.1
+    dns_search:
+     - node.consul
+    environment:
+     - DC_NAME=dc1
+     - BOOTSTRAP_CONSUL=false
+     - RUN_SERVER=false
+    links:
+     - consul:consul
+     - kafka0:kafka
+    ports:
+     - 9000:9000
+    privileged: true
+
+carbon:
+    hostname: carbon
+    image: qnib/carbon
+    dns: 127.0.0.1
+    environment:
+     - SERVICE_2003_NAME=carbon
+     - FORWARD_TO_LOGSTASH=false
+     - SKIP_PSWATCH=true
+    links:
+    - consul:consul
+    ports:
+     - 2003:2003
+
+gapi:
+    hostname: graphite-api
+    dns: 127.0.0.1
+    image: qnib/graphite-api
+    environment:
+     - SKIP_PSWATCH=true
+     - SERVICE_8888_NAME=graphite-api
+    ports:
+     - 8888:80
+    links:
+     - consul:consul
+     - carbon:carbon
+    volumes_from:
+     - carbon
+    privileged: true
+
+kibana:
+    extends:
+        file: base.yml
+        service: kibana3
+    volumes:
+     - ./var/www/kibana/app/dashboards/:/var/www/kibana/app/dashboards/
+    links:
+     - consul:consul
+     - elasticsearch:elasticsearch
+
+grafana:
+    image: qnib/grafana
+    hostname: grafana
+    ports:
+    - "8081:80"
+    dns: 127.0.0.1
+    environment:
+     - DC_NAME=dc1
+     - SKIP_PSWATCH=true
+    links:
+     - consul:consul
+    volumes:
+     - ./opt/grafana-1.9.1/app/dashboards/:/opt/grafana-1.9.1/app/dashboards/
+    privileged: true
+    
+kafka0:
+    extends:
+      file: base.yml
+      service: kafka
+    hostname: kafka0
+    environment:
+    - BARE_HOST=kafka0
+    links:
+    - consul:consul
+    - zookeeper:zookeeper
+
+kafka1:
+    extends:
+      file: base.yml
+      service: kafka
+    environment:
+    - BARE_HOST=kafka1
+    hostname: kafka1
+    links:
+    - consul:consul
+    - zookeeper:zookeeper
+
+kafka2:
+    extends:
+      file: base.yml
+      service: kafka
+    hostname: kafka2
+    environment:
+    - BARE_HOST=kafka2
+    links:
+    - consul:consul
+    - zookeeper:zookeeper
+
