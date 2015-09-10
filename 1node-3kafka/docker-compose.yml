@@ -20,6 +20,9 @@ logger:
   extends:
     file: base.yml
     service: logger
+  volumes:
+   - ./etc/logstash/conf.d/:/etc/logstash/conf.d/
+   - ./etc/grok/patterns/:/etc/grok/patterns/
   links:
   - consul:consul
 
