@@ -1,0 +1,51 @@
+kafka:
+    dns: 127.0.0.1
+    dns_search:
+    - node.consul
+    - service.consul
+    image: qnib/kafka:0.8.1.1
+    environment:
+     - DC_NAME=dc1
+     - FORWARD_TO_KAFKA=true
+     - SKIP_PSWATCH=true
+    privileged: true
+
+kibana3:
+  image: qnib/kibana3
+  ports:
+   - "80:80"
+  environment:
+  - DC_NAME=dc1
+  - FORWARD_TO_LOGSTASH=false
+  - COLLECT_METRICS=false
+  - SKIP_PSWATCH=true
+  dns: 127.0.0.1
+  hostname: kibana3
+  privileged: true
+
+logger:
+  image: qnib/logger
+  ports:
+   - "5514:5514"
+  environment:
+  - DC_NAME=dc1
+  - FORWARD_TO_LOGSTASH=false
+  - COLLECT_METRICS=false
+  - SKIP_PSWATCH=true
+  dns: 127.0.0.1
+  hostname: logger
+  privileged: true
+
+elasticsearch:
+  image: qnib/es-kopf
+  environment:
+  - DC_NAME=dc1
+  - ES_CLUSTER_NAME=qnib2015
+  - FORWARD_TO_LOGSTASH=false
+  - COLLECT_METRICS=false
+  - SKIP_PSWATCH=true
+  dns: 127.0.0.1
+  hostname: elasticsearch
+  volumes:
+  - /var/lib/elasticsearch
+  privileged: true
