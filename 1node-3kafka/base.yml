@@ -24,14 +24,16 @@ kibana3:
   privileged: true
 
 logger:
-  image: qnib/logger
+  image: qnib/logstash
   ports:
    - "5514:5514"
   environment:
-  - DC_NAME=dc1
-  - FORWARD_TO_LOGSTASH=false
-  - COLLECT_METRICS=false
-  - SKIP_PSWATCH=true
+   - DC_NAME=dc1
+   - FORWARD_TO_LOGSTASH=false
+   - COLLECT_METRICS=false
+   - SKIP_PSWATCH=true
+   - BOOTSTRAP_CONSUL=false
+   - RUN_SERVER=false
   dns: 127.0.0.1
   hostname: logger
   privileged: true
