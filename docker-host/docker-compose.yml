@@ -1,0 +1,100 @@
+consul:
+    hostname: consul
+    image: qnib/consul
+    environment:
+     - DC_NAME=docker1
+     - BOOTSTRAP_DOCKER=true
+     - RUN_SERVER=true
+    ports:
+     - "8500:8500"
+    dns: 127.0.0.1
+    
+registry:
+    image: registry:2
+    ports:
+    - 5000:5000
+    environment:
+    - STORAGE_PATH=/registry
+    volumes:
+    - /var/lib/docker-registry/:/registry/
+    
+carbon:
+    hostname: carbon
+    image: qnib/carbon
+    dns: 127.0.0.1
+    environment:
+     - DC_NAME=docker1
+     - SERVICE_2003_NAME=carbon
+     - FORWARD_TO_LOGSTASH=false
+     - SKIP_PSWATCH=true
+    links:
+    - consul:consul
+    ports:
+     - 2003:2003
+
+gapi:
+    hostname: graphite-api
+    dns: 127.0.0.1
+    image: qnib/graphite-api
+    environment:
+     - DC_NAME=docker1
+     - SKIP_PSWATCH=true
+     - SERVICE_8888_NAME=graphite-api
+    ports:
+     - 8888:80
+    links:
+     - consul:consul
+     - carbon:carbon
+    volumes_from:
+     - carbon
+    privileged: true
+
+elasticsearch:
+    image: qnib/es-kopf
+    dns: 127.0.0.1
+    hostname: elasticsearch
+    environment:
+    - DC_NAME=docker1
+    - ES_CLUSTER_NAME=qnib2015
+    - FORWARD_TO_LOGSTASH=false
+    - COLLECT_METRICS=false
+    - SKIP_PSWATCH=true
+    volumes:
+    - /var/lib/elasticsearch
+    ports:
+    - "9200:9200"
+    links:
+       - consul:consul
+    privileged: true
+
+grafana:
+    image: qnib/grafana
+    hostname: grafana
+    ports:
+    - "8080:80"
+    dns: 127.0.0.1
+    environment:
+     - DC_NAME=docker1
+     - SKIP_PSWATCH=true
+    links:
+     - consul:consul
+    volumes:
+     - ./opt/grafana-1.9.1/app/dashboards/:/opt/grafana-1.9.1/app/dashboards/
+    privileged: true
+
+heka:
+   image: qnib/heka
+   hostname: heka
+   dns: 127.0.0.1
+   ports:
+   - 4352:4352
+   environment:
+   - FORWARD_TO_HEKA=false
+   - DC_NAME=docker1
+   links:
+   - consul:consul
+   volumes:
+   - /proc/stat:/host/proc/stat:ro
+   - /sys/block/sda/stat:/host/sys/block/sda/stat:ro
+   - /proc/meminfo:/host/proc/meminfo:ro
+   - /proc/loadavg:/host/proc/loadavg:ro
