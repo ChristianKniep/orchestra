@@ -35,6 +35,8 @@ logger:
    - BOOTSTRAP_CONSUL=false
    - RUN_SERVER=false
   dns: 127.0.0.1
+  dns_search:
+   - node.consul
   hostname: logger
   privileged: true
 
