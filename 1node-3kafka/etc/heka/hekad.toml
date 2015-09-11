@@ -8,49 +8,49 @@ ticker_interval = 5
 type = "KafkaInput"
 topic = "ring0"
 offset_method = "Newest"
-addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092","kafka5.node.consul:9092"]
+addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka2.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092"]
 
 [KafkaInputR1]
 type = "KafkaInput"
 topic = "ring1"
 offset_method = "Newest"
-addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092","kafka5.node.consul:9092"]
+addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka2.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092"]
 
 [KafkaInputR2]
 type = "KafkaInput"
 topic = "ring2"
 offset_method = "Newest"
-addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092","kafka5.node.consul:9092"]
+addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka2.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092"]
 
 [KafkaInputR3]
 type = "KafkaInput"
 topic = "ring3"
 offset_method = "Newest"
-addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092","kafka5.node.consul:9092"]
+addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka2.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092"]
 
 [KafkaInputR4]
 type = "KafkaInput"
 topic = "ring4"
 offset_method = "Newest"
-addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092","kafka5.node.consul:9092"]
+addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka2.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092"]
 
 [KafkaInputR5]
 type = "KafkaInput"
 topic = "ring5"
 offset_method = "Newest"
-addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092","kafka5.node.consul:9092"]
+addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka2.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092"]
 
 [KafkaInputFinal]
 type = "KafkaInput"
 topic = "final"
 offset_method = "Newest"
-addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092","kafka5.node.consul:9092"]
+addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka2.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092"]
 
 [KafkaOutputR0R1]
 message_matcher = "Type == 'heka.kafka' && Fields[Topic] == 'ring0'"
 type = "KafkaOutput"
 #addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092","kafka5.node.consul:9092"]
-addrs = ["kafka0.node.consul:9092"]
+addrs = ["kafka.service.consul:9092"]
 encoder = "PayloadEncoder"
 topic = "ring1"
 
@@ -58,7 +58,7 @@ topic = "ring1"
 message_matcher = "Type == 'heka.kafka' && Fields[Topic] == 'ring1'"
 type = "KafkaOutput"
 #addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092","kafka5.node.consul:9092"]
-addrs = ["kafka0.node.consul:9092"]
+addrs = ["kafka.service.consul:9092"]
 encoder = "PayloadEncoder"
 topic = "ring2"
 
@@ -66,7 +66,7 @@ topic = "ring2"
 message_matcher = "Type == 'heka.kafka' && Fields[Topic] == 'ring2'"
 type = "KafkaOutput"
 #addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092","kafka5.node.consul:9092"]
-addrs = ["kafka0.node.consul:9092"]
+addrs = ["kafka.service.consul:9092"]
 encoder = "PayloadEncoder"
 topic = "ring3"
 
@@ -74,7 +74,7 @@ topic = "ring3"
 message_matcher = "Type == 'heka.kafka' && Fields[Topic] == 'ring3'"
 type = "KafkaOutput"
 #addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092","kafka5.node.consul:9092"]
-addrs = ["kafka0.node.consul:9092"]
+addrs = ["kafka.service.consul:9092"]
 encoder = "PayloadEncoder"
 topic = "ring4"
 
@@ -82,7 +82,7 @@ topic = "ring4"
 message_matcher = "Type == 'heka.kafka' && Fields[Topic] == 'ring4'"
 type = "KafkaOutput"
 #addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092","kafka5.node.consul:9092"]
-addrs = ["kafka0.node.consul:9092"]
+addrs = ["kafka.service.consul:9092"]
 encoder = "PayloadEncoder"
 topic = "ring5"
 
@@ -90,7 +90,7 @@ topic = "ring5"
 message_matcher = "Type == 'heka.kafka' && Fields[Topic] == 'ring5'"
 type = "KafkaOutput"
 #addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092","kafka5.node.consul:9092"]
-addrs = ["kafka0.node.consul:9092"]
+addrs = ["kafka.service.consul:9092"]
 encoder = "PayloadEncoder"
 topic = "final"
 
