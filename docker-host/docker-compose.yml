@@ -2,8 +2,8 @@ consul:
     hostname: consul
     image: qnib/consul
     environment:
-     - DC_NAME=docker1
-     - BOOTSTRAP_DOCKER=true
+     - DC_NAME=dc1
+     - BOOTSTRAP_CONSUL=true
      - RUN_SERVER=true
     ports:
      - "8500:8500"
@@ -23,7 +23,7 @@ carbon:
     image: qnib/carbon
     dns: 127.0.0.1
     environment:
-     - DC_NAME=docker1
+     - DC_NAME=dc1
      - SERVICE_2003_NAME=carbon
      - FORWARD_TO_LOGSTASH=false
      - SKIP_PSWATCH=true
@@ -37,7 +37,7 @@ gapi:
     dns: 127.0.0.1
     image: qnib/graphite-api
     environment:
-     - DC_NAME=docker1
+     - DC_NAME=dc1
      - SKIP_PSWATCH=true
      - SERVICE_8888_NAME=graphite-api
     ports:
@@ -54,7 +54,7 @@ elasticsearch:
     dns: 127.0.0.1
     hostname: elasticsearch
     environment:
-    - DC_NAME=docker1
+    - DC_NAME=dc1
     - ES_CLUSTER_NAME=qnib2015
     - FORWARD_TO_LOGSTASH=false
     - COLLECT_METRICS=false
@@ -67,6 +67,21 @@ elasticsearch:
        - consul:consul
     privileged: true
 
+kibana3:
+    image: qnib/kibana3
+    ports:
+    - "80:80"
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_LOGSTASH=false
+    - COLLECT_METRICS=false
+    - SKIP_PSWATCH=true
+    links:
+    - consul:consul
+    dns: 127.0.0.1
+    hostname: kibana3
+    privileged: true
+
 grafana:
     image: qnib/grafana
     hostname: grafana
@@ -74,7 +89,7 @@ grafana:
     - "8080:80"
     dns: 127.0.0.1
     environment:
-     - DC_NAME=docker1
+     - DC_NAME=dc1
      - SKIP_PSWATCH=true
     links:
      - consul:consul
@@ -90,7 +105,9 @@ heka:
    - 4352:4352
    environment:
    - FORWARD_TO_HEKA=false
-   - DC_NAME=docker1
+   - DC_NAME=dc1
+   - BOOTSTRAP_CONSUL=false
+   - RUN_SERVER=false
    links:
    - consul:consul
    volumes:

@@ -1,7 +1,7 @@
 {
   "id": null,
   "title": "Server Stats",
-  "originalTitle": "No Title",
+  "originalTitle": "Server Stats",
   "tags": [],
   "style": "light",
   "timezone": "browser",
@@ -11,12 +11,32 @@
   "rows": [
     {
       "title": "New row",
+      "height": "100px",
+      "editable": true,
+      "collapse": false,
+      "panels": [
+        {
+          "title": "Description",
+          "error": false,
+          "span": 12,
+          "editable": true,
+          "type": "text",
+          "id": 2,
+          "mode": "markdown",
+          "content": "[Home](/grafana/) > Server Stats\n\nShows Information about the Docker Host underneath",
+          "style": {},
+          "links": []
+        }
+      ]
+    },
+    {
+      "title": "New row",
       "height": "250px",
       "editable": true,
       "collapse": false,
       "panels": [
         {
-          "title": "no title (click here)",
+          "title": "Carbon Metrics",
           "error": false,
           "span": 12,
           "editable": true,
@@ -33,7 +53,7 @@
           "grid": {
             "leftMax": null,
             "rightMax": null,
-            "leftMin": null,
+            "leftMin": 0,
             "rightMin": null,
             "threshold1": null,
             "threshold2": null,
@@ -41,7 +61,7 @@
             "threshold2Color": "rgba(234, 112, 112, 0.22)"
           },
           "lines": true,
-          "fill": 0,
+          "fill": 1,
           "linewidth": 1,
           "points": false,
           "pointradius": 5,
@@ -50,10 +70,10 @@
           "percentage": false,
           "legend": {
             "show": true,
-            "values": false,
+            "values": true,
             "min": false,
-            "max": false,
-            "current": false,
+            "max": true,
+            "current": true,
             "total": false,
             "avg": false
           },
@@ -63,9 +83,81 @@
             "value_type": "cumulative",
             "shared": false
           },
-          "targets": [],
+          "targets": [
+            {
+              "target": "carbon.relays.carbon-r0.metricsReceived"
+            }
+          ],
           "aliasColors": {},
-          "seriesOverrides": []
+          "seriesOverrides": [],
+          "links": []
+        }
+      ]
+    },
+    {
+      "title": "New row",
+      "height": "250px",
+      "editable": true,
+      "collapse": false,
+      "panels": [
+        {
+          "title": "Carbon CPU usage",
+          "error": false,
+          "span": 12,
+          "editable": true,
+          "type": "graph",
+          "id": 3,
+          "datasource": "graphite",
+          "renderer": "flot",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "short"
+          ],
+          "grid": {
+            "leftMax": null,
+            "rightMax": null,
+            "leftMin": 0,
+            "rightMin": null,
+            "threshold1": null,
+            "threshold2": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2Color": "rgba(234, 112, 112, 0.22)",
+            "thresholdLine": false
+          },
+          "lines": true,
+          "fill": 1,
+          "linewidth": 1,
+          "points": false,
+          "pointradius": 5,
+          "bars": false,
+          "stack": true,
+          "percentage": false,
+          "legend": {
+            "show": true,
+            "values": true,
+            "min": false,
+            "max": true,
+            "current": true,
+            "total": false,
+            "avg": true,
+            "alignAsTable": true
+          },
+          "nullPointMode": "connected",
+          "steppedLine": false,
+          "tooltip": {
+            "value_type": "individual",
+            "shared": true
+          },
+          "targets": [
+            {
+              "target": "aliasByNode(carbon.*.*.cpuUsage, 2)"
+            }
+          ],
+          "aliasColors": {},
+          "seriesOverrides": [],
+          "links": []
         }
       ]
     }
