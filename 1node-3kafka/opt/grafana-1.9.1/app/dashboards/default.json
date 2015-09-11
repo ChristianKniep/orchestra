@@ -96,7 +96,7 @@
           },
           "targets": [
             {
-              "target": "aliasByNode(servers.*.network.eth0.rx_byte, 1)",
+              "target": "aliasByNode(servers.*.com_sun_management_UnixOperatingSystem.ProcessCpuLoad, 1)",
               "function": "mean",
               "column": "value",
               "series": "/^servers..*.network.eth0.rx_byte/",
@@ -194,6 +194,79 @@
         }
       ],
       "notice": false
+    },
+    {
+      "title": "New row",
+      "height": "250px",
+      "editable": true,
+      "collapse": false,
+      "panels": [
+        {
+          "title": "Kafka Test",
+          "error": false,
+          "span": 12,
+          "editable": true,
+          "type": "graph",
+          "id": 4,
+          "datasource": "graphite",
+          "renderer": "flot",
+          "x-axis": true,
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "short"
+          ],
+          "grid": {
+            "leftMax": null,
+            "rightMax": null,
+            "leftMin": null,
+            "rightMin": null,
+            "threshold1": null,
+            "threshold2": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "lines": true,
+          "fill": 0,
+          "linewidth": 1,
+          "points": false,
+          "pointradius": 5,
+          "bars": false,
+          "stack": false,
+          "percentage": false,
+          "legend": {
+            "show": true,
+            "values": true,
+            "min": false,
+            "max": false,
+            "current": true,
+            "total": false,
+            "avg": false
+          },
+          "nullPointMode": "connected",
+          "steppedLine": false,
+          "tooltip": {
+            "value_type": "cumulative",
+            "shared": true
+          },
+          "targets": [
+            {
+              "target": "integral(stats.logstash.host.msg_seen)"
+            },
+            {
+              "target": "stats.gauges.logstash.host.msg_last"
+            }
+          ],
+          "aliasColors": {},
+          "seriesOverrides": [
+            {
+              "alias": "diffSeries(integral(stats.logstash.host.msg_seen),stats.gauges.logstash.host.msg_last)",
+              "yaxis": 2
+            }
+          ],
+          "links": []
+        }
+      ]
     }
   ],
   "nav": [
@@ -230,7 +303,7 @@
     }
   ],
   "time": {
-    "from": "now-5m",
+    "from": "now-15m",
     "to": "now"
   },
   "templating": {
