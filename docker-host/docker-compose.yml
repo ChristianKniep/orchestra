@@ -9,15 +9,6 @@ consul:
      - "8500:8500"
     dns: 127.0.0.1
     
-registry:
-    image: registry:2
-    ports:
-    - 5000:5000
-    environment:
-    - STORAGE_PATH=/registry
-    volumes:
-    - /var/lib/docker-registry/:/registry/
-    
 carbon:
     hostname: carbon
     image: qnib/carbon
@@ -111,6 +102,8 @@ heka:
    links:
    - consul:consul
    volumes:
+   - ./heka/etc/:/etc/heka/
+   - ./heka/lua/:/usr/share/heka/lua/
    - /proc/stat:/host/proc/stat:ro
    - /sys/block/sda/stat:/host/sys/block/sda/stat:ro
    - /proc/meminfo:/host/proc/meminfo:ro
