@@ -21,3 +21,25 @@ vmConsul:
     hostname: vmConsul2
     environment:
      - DC_NAME=vm2
+    
+zookeeper:
+    extends:
+        file: base.yml
+        service: zookeeper
+    hostname: zookeeper2
+    environment:
+     - DC_NAME=vm2
+     - MYID=2
+     - ZK_ADDV_ADDR=192.168.99.101
+    links:
+     - vmConsul:consul
+
+#zkui:
+#    extends:
+#        file: base.yml
+#        service: zkui
+#    hostname: zkui2
+#    environment:
+#     - DC_NAME=vm2
+#    links:
+#     - vmConsul:consul

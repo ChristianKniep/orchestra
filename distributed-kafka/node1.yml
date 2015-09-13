@@ -1,0 +1,81 @@
+consul:
+    extends:
+        file: base.yml
+        service: consul
+    hostname: consul1
+    environment:
+    - ADDV_ADDR=192.168.99.100
+    - CONSUL_ADDV_ADDR_WAN=192.168.99.100
+    - BOOTSTRAP_CONSUL=true
+
+registrator:
+    extends:
+        file: base.yml
+        service: registrator
+    command: -ip 192.168.99.100 consul://172.17.42.1:8500
+
+vmConsul:
+    extends:
+        file: base.yml
+        service: vmConsul
+    hostname: vmConsul1
+    environment:
+     - DC_NAME=vm1
+    
+zookeeper:
+    extends:
+        file: base.yml
+        service: zookeeper
+    hostname: zookeeper1
+    environment:
+     - DC_NAME=vm1
+     - MYID=1
+     - ZK_ADDV_ADDR=192.168.99.100
+    links:
+     - vmConsul:consul
+
+zkui:
+    extends:
+        file: base.yml
+        service: zkui
+    hostname: zkui1
+    environment:
+     - DC_NAME=vm1
+    links:
+     - vmConsul:consul
+
+kafka:
+    extends:
+      file: base.yml
+      service: kafka
+    hostname: kafka1
+    links:
+     - zookeeper:zookeeper
+     - vmConsul:consul
+    environment:
+     - DC_NAME=vm1
+     - BROKER_ID=1
+     - KAFKA_HOST=192.168.99.100
+
+kafkaMon:
+    extends:
+      file: base.yml
+      service: kafkaMon
+    hostname: kafka-monitor1
+    environment:
+     - DC_NAME=vm1
+    links:
+    - vmConsul:consul
+    - kafka:kafka
+
+kafkaMgr:
+    extends:
+      file: base.yml
+      service: kafkaMgr
+    hostname: kafka-manager1
+    environment:
+     - DC_NAME=vm1
+    links:
+    - vmConsul:consul
+    - kafka:kafka
+
