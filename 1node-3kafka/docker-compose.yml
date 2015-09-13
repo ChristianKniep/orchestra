@@ -86,10 +86,10 @@ kafka0:
     extends:
       file: base.yml
       service: kafka
-    hostname: kafka0
     environment:
     - DC_NAME=dc1
     - BARE_HOST=kafka0
+    hostname: kafka0
     external_links:
     - dockerhost_consul_1:consul
     links:
@@ -121,32 +121,18 @@ kafka2:
     links:
     - zookeeper:zookeeper
 
-kafka3:
-    extends:
-      file: base.yml
-      service: kafka
-    hostname: kafka3
-    environment:
-    - DC_NAME=dc1
-    - BARE_HOST=kafka3
-    external_links:
-    - dockerhost_consul_1:consul
-    links:
-    - zookeeper:zookeeper
-
-
-kafka4:
-    extends:
-      file: base.yml
-      service: kafka
-    hostname: kafka4
-    environment:
-    - DC_NAME=dc1
-    - BARE_HOST=kafka4
-    external_links:
-    - dockerhost_consul_1:consul
-    links:
-    - zookeeper:zookeeper
+#kafka3:
+#    extends:
+#      file: base.yml
+#      service: kafka
+#    hostname: kafka3
+#    environment:
+#    - DC_NAME=dc1
+#    - BARE_HOST=kafka3
+#    external_links:
+#    - dockerhost_consul_1:consul
+#    links:
+#    - zookeeper:zookeeper
 
 heka:
     image: qnib/heka
@@ -156,17 +142,15 @@ heka:
     - node.consul
     - service.consul
     ports:
-    - 4352:4352
+    - 14352:4352
     environment:
     - FORWARD_TO_HEKA=false
     - DC_NAME=dc1
     - BOOTSTRAP_CONSUL=false
     - RUN_SERVER=false
+    - SUPERVISOR_SKIP_SRV=heka
     external_links:
     - dockerhost_consul_1:consul
     volumes:
-    - /proc/stat:/host/proc/stat:ro
-    - /sys/block/sda/stat:/host/sys/block/sda/stat:ro
-    - /proc/meminfo:/host/proc/meminfo:ro
-    - /proc/loadavg:/host/proc/loadavg:ro
-    - ./etc/heka/:/etc/heka/
+    - ./heka/etc/:/etc/heka/
+    - ./heka/lua/:/usr/share/heka/lua/
