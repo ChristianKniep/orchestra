@@ -6,13 +6,72 @@ local function ToInteger(number)
     return math.floor(tonumber(number) or error("Could not cast '" .. tostring(number) .. "' to number.'"))
 end
 
-miss_cnt = 0
-cur_nr = 0
-next_nr = 0
-count = 0
-exp = 0
+function add_to_buffer(list_element)
+   table.insert(buffer,list_element)
+   if (#buffer > buffer_size)then
+      while #buffer > buffer_size do 
+         table.remove(buffer,1)
+      end
+   end
+   return buffer
+end
+
+function print_list(list_object)
+   print("## print list")
+   for i, k in ipairs(list_object) do
+      print("k-> "..k)
+   end
+end
+
+function table.contains(table, element)
+  for _, value in pairs(table) do
+    if value == element then
+      return true
+    end
+  end
+  return false
+end
+
+function deepcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[deepcopy(orig_key)] = deepcopy(orig_value)
+        end
+        setmetatable(copy, deepcopy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
+function harvest_missing()
+    local copy = deepcopy(buffer)
+    table.sort(copy)
+    for idx, cur in ipairs(copy) do
+        if not (last_nr == -1) then
+            if not (last_nr + 1 == cur) then
+                if not table.contains(missed, cur) then
+                    table.insert(missed, cur)
+                end
+            end
+        end
+        last_nr = cur
+    end
+    
+end
+
+
+
+buffer = {}
+buffer_size = 65000
+missed = {}
 reset = false
 miss = false
+last_nr = -1
+count = 0
 
 function process_message()
     count = count + 1
@@ -21,13 +80,8 @@ function process_message()
     if count == 1 then
         reset = true
     else
-        if not (cur_nr == next_nr) then
-            miss_cnt = miss_cnt + 1
-            miss = true
-        end
+        add_to_buffer(cur_nr)
     end
-    exp = next_nr
-    next_nr = cur_nr + 1
     return 0
 end
 
@@ -36,12 +90,14 @@ function timer_event(ns)
     extra = ""
     if reset then
         stat = "RESET"
+        last_nr = -1
         reset = false
     end
-    if miss then
+    cnt_missed = table.getn(missed)
+    harvest_missing()
+    if not (cnt_missed == table.getn(missed)) then
         stat = "MISS"
-        miss = false
     end
-    res = string.format("%6s > Seen '%5s' msg so far last:%4s | missed:%s", stat, count, cur_nr, miss_cnt)
+    res = string.format("%6s > Seen '%6s' msg so far | last:'%6s' | missed: %s", stat, count, last_nr, table.concat(missed, ","))
     inject_payload("txt", "", res)
 end
