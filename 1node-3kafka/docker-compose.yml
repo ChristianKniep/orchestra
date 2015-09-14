@@ -89,6 +89,8 @@ kafka0:
     environment:
     - DC_NAME=dc1
     - BARE_HOST=kafka0
+    - KAFKA_MIN_INSTANCES=3
+    - KAFKA_BOOTSTRAP_TOPICS=syslog:2,ring0:3,ring1:3,ring2:3,ring3:3,ring4:3,ring5:3
     hostname: kafka0
     external_links:
     - dockerhost_consul_1:consul
@@ -121,18 +123,18 @@ kafka2:
     links:
     - zookeeper:zookeeper
 
-#kafka3:
-#    extends:
-#      file: base.yml
-#      service: kafka
-#    hostname: kafka3
-#    environment:
-#    - DC_NAME=dc1
-#    - BARE_HOST=kafka3
-#    external_links:
-#    - dockerhost_consul_1:consul
-#    links:
-#    - zookeeper:zookeeper
+kafka3:
+    extends:
+      file: base.yml
+      service: kafka
+    hostname: kafka3
+    environment:
+    - DC_NAME=dc1
+    - BARE_HOST=kafka3
+    external_links:
+    - dockerhost_consul_1:consul
+    links:
+    - zookeeper:zookeeper
 
 heka:
     image: qnib/heka
