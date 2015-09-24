@@ -16,7 +16,7 @@ elasticsearch:
   environment:
   - DC_NAME=dc1
   - CNT_TYPE=service
-  - ES_CLUSTER_NAME=gaikai
+  - ES_CLUSTER_NAME=qnib
   - FORWARD_TO_LOGSTASH=true
   - COLLECT_METRICS=true
   dns: 127.0.0.1
