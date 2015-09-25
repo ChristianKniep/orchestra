@@ -97,7 +97,7 @@ topic = "final"
 [inc_anomaly]
 type = "SandboxFilter"
 message_matcher = "Type == 'heka.kafka' && Fields[Topic] == 'final'"
-ticker_interval = 5
+ticker_interval = 1
 filename = "lua/inc_anomaly.lua"
 
 [PayloadEncoder]
