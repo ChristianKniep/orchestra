@@ -87,8 +87,8 @@ encoder = "PayloadEncoder"
 topic = "ring5"
 
 [KafkaOutputR5Fin]
-message_matcher = "Type == 'heka.kafka' && Fields[Topic] == 'ring5'"
 type = "KafkaOutput"
+message_matcher = "Type == 'heka.kafka' && Fields[Topic] == 'ring5'"
 #addrs = ["kafka0.node.consul:9092","kafka1.node.consul:9092","kafka3.node.consul:9092","kafka4.node.consul:9092","kafka5.node.consul:9092"]
 addrs = ["kafka.service.consul:9092"]
 encoder = "PayloadEncoder"
@@ -97,7 +97,7 @@ topic = "final"
 [inc_anomaly]
 type = "SandboxFilter"
 message_matcher = "Type == 'heka.kafka' && Fields[Topic] == 'final'"
-ticker_interval = 1
+ticker_interval = 5
 filename = "lua/inc_anomaly.lua"
 
 [PayloadEncoder]
