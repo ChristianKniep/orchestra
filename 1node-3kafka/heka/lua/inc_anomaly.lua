@@ -49,12 +49,18 @@ end
 
 function harvest_missing()
     local copy = deepcopy(buffer)
+    local cur = -1
     table.sort(copy)
     for idx, cur in ipairs(copy) do
         if not (last_nr == -1) then
             if not (last_nr + 1 == cur) then
-                if not table.contains(missed, cur) then
-                    table.insert(missed, cur)
+                if last_nr < cur then
+                    if not table.contains(missed, cur) then
+                        msg = string.format("last_nr:%s <> %s:cur", last_nr, cur)
+                        table.insert(missed, cur)
+                    end
+                --else
+                    --msg = string.format("last_nr:%s was bigger then cur:%s, which indicates that heka was just started. Won't consider this a MISS", last_nr, cur)
                 end
             end
         end
@@ -72,6 +78,7 @@ reset = false
 miss = false
 last_nr = -1
 count = 0
+msg = ""
 
 function process_message()
     count = count + 1
@@ -98,6 +105,6 @@ function timer_event(ns)
     if not (cnt_missed == table.getn(missed)) then
         stat = "MISS"
     end
-    res = string.format("%6s > Seen '%6s' msg so far | last:'%6s' | missed: %s", stat, count, last_nr, table.concat(missed, ","))
+    res = string.format("%6s > Seen '%6s' msg so far | last:'%6s' | missed: %s | %s", stat, count, last_nr, table.concat(missed, ","), msg)
     inject_payload("txt", "", res)
 end
