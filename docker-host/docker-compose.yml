@@ -61,7 +61,7 @@ elasticsearch:
 kibana3:
     image: qnib/kibana3
     ports:
-    - "80:80"
+    - "8081:80"
     environment:
     - DC_NAME=dc1
     - FORWARD_TO_LOGSTASH=false

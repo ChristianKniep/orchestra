@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	const sleep_ms = 1100
+	const sleep_ms = 500
 	// random seed
 	random := rand.New(rand.NewSource(99))
 	producer, err := NewSyncProducer([]string{"kafka.service.consul:9092"}, nil)
