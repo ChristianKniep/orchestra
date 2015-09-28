@@ -8,8 +8,10 @@ consul:
 
 terminal:
     image: qnib/terminal
-    links:
-    - consul:consul
     dns: 127.0.0.1
     hostname: terminal
+    links:
+     - consul:consul
     privileged: true
+    volumes:
+     - ./data/:/data/
