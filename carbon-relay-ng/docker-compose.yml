@@ -45,7 +45,7 @@ gapi:
 grafana:
     image: qnib/grafana
     ports:
-     - "8080:80"
+     - "8070:80"
     environment:
      - DC_NAME=dc1
      - COLLECT_METRICS=true
