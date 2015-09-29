@@ -1,0 +1,31 @@
+gapi:
+    hostname: graphite-api
+    dns: 127.0.0.1
+    image: qnib/graphite-api
+    environment:
+     - DC_NAME=dc1
+     - SKIP_PSWATCH=true
+    ports:
+     - 8888:80
+    external_links:
+     - consul_consul_1:consul
+     - backend_carbon_1:carbon
+    volumes_from:
+     - backend_carbon_1
+    privileged: true
+
+logger:
+  image: qnib/logger
+  dns: 127.0.0.1
+  hostname: logger
+  ports:
+   - "5514:5514"
+  environment:
+  - DC_NAME=dc1
+  - FORWARD_TO_LOGSTASH=false
+  - COLLECT_METRICS=true
+  - CNT_TYPE=service
+  external_links:
+   - consul_consul_1:consul
+   - backend_elasticsearch_1:elasticsearch
+  privileged: true
