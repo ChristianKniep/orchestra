@@ -1,0 +1,69 @@
+consul:
+  image: qnib/consul
+  ports:
+   - "8500:8500"
+  environment:
+  - DC_NAME=dc1
+  dns: 127.0.0.1
+  hostname: consul
+  privileged: true
+
+carbon:
+    image: qnib/carbon
+    privileged: true
+    ports:
+     - "2003:2003"
+    environment:
+     - DC_NAME=dc1
+     - CARBON_METRICS_ENTRY=false
+     - SKIP_PSWATCH=true
+     - COLLECT_METRICS=true
+    dns: 127.0.0.1
+    hostname: carbon
+    volumes:
+     - /var/lib/carbon/whisper/
+    links:
+     - consul:consul
+
+gapi:
+    hostname: graphite-api
+    dns: 127.0.0.1
+    image: qnib/graphite-api
+    environment:
+     - DC_NAME=dc1
+     - SKIP_PSWATCH=true
+     - COLLECT_METRICS=true
+    ports:
+     - 8888:80
+    links:
+     - consul:consul
+     - carbon:carbon
+    volumes_from:
+     - carbon
+    privileged: true
+
+grafana:
+    image: qnib/grafana
+    ports:
+     - "8070:80"
+    environment:
+     - DC_NAME=dc1
+     - COLLECT_METRICS=true
+    dns: 127.0.0.1
+    hostname: grafana
+    links:
+     - consul:consul
+     - gapi:gapi
+    privileged: true
+
+metrics:
+    image: qnib/carbon-relay-ng
+    privileged: true
+    hostname: carbon-relay-ng
+    dns: 127.0.0.1
+    ports:
+     - 8081:8081
+    environment:
+     - DC_NAME=dc1
+    links:
+     - consul:consul

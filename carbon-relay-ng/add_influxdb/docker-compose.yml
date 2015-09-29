@@ -1,0 +1,15 @@
+influxdb:
+    hostname: influxdb
+    dns: 127.0.0.1
+    image: qnib/influxdb
+    volumes:
+     - /opt/influxdb/shared
+    environment:
+     - DC_NAME=dc1
+    external_links:
+     - carbonrelayng_carbon_1:consul
+    ports:
+     - 4242:4242
+     - 8083:8083
+     - 8086:8086
+    privileged: true

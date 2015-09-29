@@ -7,11 +7,12 @@ consul:
     privileged: true
 
 terminal:
-    image: qnib/terminal
+    image: qnib/rocketchat
     dns: 127.0.0.1
-    hostname: terminal
+    hostname: rocketchat
     links:
      - consul:consul
-    privileged: true
-    volumes:
-     - ./data/:/data/
+    ports:
+     - 27017:27017
+     - 3000:3000
+    privileged: false

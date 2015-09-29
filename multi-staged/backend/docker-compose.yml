@@ -1,0 +1,30 @@
+carbon:
+    hostname: carbon
+    image: qnib/carbon
+    dns: 127.0.0.1
+    environment:
+     - DC_NAME=dc1
+     - FORWARD_TO_LOGSTASH=false
+     - SKIP_PSWATCH=true
+    external_links:
+    - consul_consul_1:consul
+    ports:
+     - 2003:2003
+
+elasticsearch:
+    image: qnib/es-kopf
+    dns: 127.0.0.1
+    hostname: elasticsearch
+    environment:
+    - DC_NAME=dc1
+    - ES_CLUSTER_NAME=qnib2015
+    - FORWARD_TO_LOGSTASH=false
+    - COLLECT_METRICS=false
+    - SKIP_PSWATCH=true
+    volumes:
+    - /var/lib/elasticsearch
+    ports:
+    - "9200:9200"
+    external_links:
+    - consul_consul_1:consul
+    privileged: true
