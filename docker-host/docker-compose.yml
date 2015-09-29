@@ -40,6 +40,20 @@ gapi:
      - carbon
     privileged: true
 
+logger:
+    image: qnib/logger
+    links:
+     - consul:consul
+    ports:
+     - "5514:5514"
+    environment:
+     - DC_NAME=dc1
+     - FORWARD_TO_LOGSTASH=false
+     - CNT_TYPE=service
+    dns: 127.0.0.1
+    hostname: logger
+    privileged: true
+    
 elasticsearch:
     image: qnib/es-kopf
     dns: 127.0.0.1
