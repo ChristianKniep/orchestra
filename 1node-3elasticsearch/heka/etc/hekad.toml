@@ -1,0 +1,44 @@
+[hekad]
+maxprocs = 2
+
+[DashboardOutput]
+ticker_interval = 1
+
+
+#[inc_anomaly]
+#type = "SandboxFilter"
+#message_matcher = "Logger == 'DateProcessInput'"
+#ticker_interval = 1
+#filename = "lua/inc_anomaly.lua"
+
+[DateProcessInput]
+type = "ProcessInput"
+ticker_interval = 1
+splitter = "TokenSplitter"
+stdout = true
+stderr = false
+    [DateProcessInput.command.0]
+    bin = "/usr/bin/date"
+    args = ["+%s"]
+
+[PayloadEncoder]
+append_newlines = false
+
+[ESLogstashV0Encoder]
+es_index_from_timestamp = true
+type_name = "%{Type}"
+
+[ElasticSearchOutput]
+message_matcher = "Logger == 'DateProcessInput'"
+server = "http://meta.elasticsearch.service.consul:9200"
+encoder = "ESLogstashV0Encoder"
+flush_interval = 50
+    [ElasticSearchOutput.buffering]
+    max_file_size = 268435456
+
+[RstEncoder]
+
+[LogOutput]
+#message_matcher = "TRUE"
+message_matcher = "Logger != 'DateProcessInput' && Type != 'heka.memstat' && Type != 'heka.all-report'"
+encoder = "RstEncoder"

@@ -1,0 +1,14 @@
+es:
+    image: qnib/elasticsearch:1.4
+    dns: 127.0.0.1
+    environment:
+    - DC_NAME=dc1
+    - ES_CLUSTER_NAME=testcluster
+    - FORWARD_TO_LOGSTASH=false
+    - COLLECT_METRICS=true
+    - SKIP_PSWATCH=true
+    - BOOTSTRAP_CONSUL=false
+    - RUN_SERVER=false
+    volumes:
+    - /var/lib/elasticsearch
+    privileged: true
