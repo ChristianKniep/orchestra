@@ -58,6 +58,8 @@ grafana:
   dns: 127.0.0.1
   hostname: grafana
   privileged: true
+  volumes:
+   - ./dash/grafana/:/opt/grafana-1.9.1/app/dashboards/
   links:
    - consul:consul
 
@@ -89,11 +91,12 @@ kibana3:
   - CNT_TYPE=service
   - SKIP_PSWATCH=true
   - COLLECT_METRICS=false
+  - HTTPPORT=9210
   dns: 127.0.0.1
   hostname: kibana3
   privileged: true
   volumes:
-   - ./dash/:/var/www/kibana/app/dashboards/
+   - ./dash/kibana3/:/var/www/kibana/app/dashboards/
   links:
   - consul:consul
 
@@ -107,6 +110,7 @@ kibana4:
   - CNT_TYPE=service
   - SKIP_PSWATCH=true
   - COLLECT_METRICS=false
+  - ES_URL=http://meta.elasticsearch.service.consul:9200
   dns: 127.0.0.1
   hostname: kibana4
   privileged: true
@@ -128,10 +132,12 @@ logstash:
     - DC_NAME=dc1
     - BOOTSTRAP_CONSUL=false
     - RUN_SERVER=false
+    - SUPERVISOR_START_EXTERNAL=/usr/local/logstash/bin/query_hb.sh
     links:
     - consul:consul
     volumes:
     - ./logstash/etc/:/etc/logstash/conf.d/
+    - ./logstash/bin:/usr/local/logstash/bin/
 
 elasticsearch:
     image: qnib/elasticsearch:1.7
