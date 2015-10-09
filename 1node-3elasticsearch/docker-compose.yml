@@ -118,6 +118,8 @@ logstash:
     image: qnib/logger
     hostname: logger
     dns: 127.0.0.1
+    ports:
+     - 5514:5514
     dns_search:
     - node.consul
     - service.consul
