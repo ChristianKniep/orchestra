@@ -6,7 +6,7 @@ es0:
     ports:
      - "9210:9200"
     environment:
-    - ES_TAGS=es0
+    - ES_TAGS=es,es0
     external_links:
     - 1node3elasticsearch_consul_1:consul
 
@@ -18,7 +18,7 @@ es1:
     ports:
      - "9211:9200"
     environment:
-    - ES_TAGS=es1
+    - ES_TAGS=es,es1
     external_links:
     - 1node3elasticsearch_consul_1:consul
 
@@ -30,6 +30,6 @@ es2:
     ports:
      - "9212:9200"
     environment:
-    - ES_TAGS=es2
+    - ES_TAGS=es,es2
     external_links:
     - 1node3elasticsearch_consul_1:consul
