@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 
 STAMP=$(date +"%H:%M:%S")
