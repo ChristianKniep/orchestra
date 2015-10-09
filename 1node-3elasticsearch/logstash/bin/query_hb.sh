@@ -58,12 +58,12 @@ while [ true ];do
         FROM=$(echo ${now} - ${offset}|bc)
         sed -i -e "s/\"from.*/\"from\": ${FROM}000,/" payload
         sed -i -e "s/\"to.*/\"to\": ${TO}000/" payload
-        cnt=$(curl -s -XGET "http://es.elasticsearch.service.consul:9200/_all/_search?pretty" -d @payload | jq ".hits.total")
+        cnt=$(curl --max-time 5 -s -XGET "http://es.elasticsearch.service.consul:9200/_all/_search?pretty" -d @payload | jq ".hits.total")
         if [ $? -ne 0 ];then
             logit "curl http://es.elasticsearch.service.consul:9200 failed..."
             break
         fi
-        msg=$(echo "es.heartbeat.cnt ${cnt} ${TO}")
+        msg=$(echo "precise.es.heartbeat.cnt ${cnt} ${TO}")
         #echo ${msg}
         echo ${msg} | nc -w1 carbon.service.consul 2003
     done
