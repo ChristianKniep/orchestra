@@ -22,7 +22,7 @@
         "0": {
           "type": "time",
           "field": "@timestamp",
-          "from": "now-15m",
+          "from": "now-1h",
           "to": "now",
           "mandate": "must",
           "active": true,
@@ -251,13 +251,12 @@
       "time_options": [
         "5m",
         "15m",
+        "30m",
+        "45m",
         "1h",
         "6h",
         "12h",
-        "24h",
-        "2d",
-        "7d",
-        "30d"
+        "24h"
       ],
       "refresh_intervals": [
         "5s",

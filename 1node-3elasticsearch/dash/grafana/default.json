@@ -96,7 +96,25 @@
           },
           "targets": [
             {
-              "target": "aliasByNode(servers.es*.network.eth0.rx_byte, 1)",
+              "target": "aliasByNode(servers.es0.network.eth0.rx_byte, 1)",
+              "function": "mean",
+              "column": "value",
+              "series": "/^servers..*.network.eth0.rx_byte/",
+              "query": "select mean(value) from /^servers..*.network.eth0.rx_byte/ where $timeFilter group by time($interval) order asc",
+              "alias": "$1",
+              "fill": ""
+            },
+            {
+              "target": "aliasByNode(servers.es1.network.eth0.rx_byte, 1)",
+              "function": "mean",
+              "column": "value",
+              "series": "/^servers..*.network.eth0.rx_byte/",
+              "query": "select mean(value) from /^servers..*.network.eth0.rx_byte/ where $timeFilter group by time($interval) order asc",
+              "alias": "$1",
+              "fill": ""
+            },
+            {
+              "target": "aliasByNode(servers.es2.network.eth0.rx_byte, 1)",
               "function": "mean",
               "column": "value",
               "series": "/^servers..*.network.eth0.rx_byte/",
@@ -176,7 +194,13 @@
           },
           "targets": [
             {
-              "target": "aliasByNode(servers.es*.network.eth0.tx_byte, 1)"
+              "target": "aliasByNode(servers.es0.network.eth0.tx_byte, 1)"
+            },
+            {
+              "target": "aliasByNode(servers.es1.network.eth0.tx_byte, 1)"
+            },
+            {
+              "target": "aliasByNode(servers.es2.network.eth0.tx_byte, 1)"
             }
           ],
           "aliasColors": {
@@ -230,7 +254,7 @@
     }
   ],
   "time": {
-    "from": "now-15m",
+    "from": "now-5m",
     "to": "now"
   },
   "templating": {
@@ -246,7 +270,7 @@
         "iconColor": "#C0C6BE",
         "lineColor": "rgba(255, 96, 96, 0.592157)",
         "iconSize": 13,
-        "enable": false,
+        "enable": true,
         "index": "logstash-*",
         "query": "type:syslog",
         "timeField": "@timestamp",
