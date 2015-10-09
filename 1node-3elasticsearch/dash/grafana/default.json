@@ -11,7 +11,7 @@
   "rows": [
     {
       "title": "Desc",
-      "height": "75px",
+      "height": "25px",
       "editable": true,
       "collapse": false,
       "collapsable": true,
@@ -22,7 +22,7 @@
           "editable": true,
           "type": "text",
           "mode": "markdown",
-          "content": "This dashboard should give a rough overview. More specific dashboards:  \n\n- [SLURM](/grafana/#/dashboard/file/slurm.json)",
+          "content": "This dashboards shows the Networktraffic overlayed with syslog from meta.elasticsearch, which should provide context of the update.",
           "style": {},
           "title": "Description",
           "id": 1,
@@ -280,7 +280,7 @@
     ],
     "enable": true
   },
-  "refresh": false,
+  "refresh": "5s",
   "version": 6,
   "hideAllLegends": false
 }

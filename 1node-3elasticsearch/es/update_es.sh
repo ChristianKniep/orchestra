@@ -25,6 +25,14 @@ if [ $? -ne 0 ];then
 fi
 
 es_ver=$(egrep "image\:.*elasticsearch:[0-9\.]+$" base.yml|egrep -o '[0-9\.]+$')
+for cont in $(docker-compose ps|grep "^es"|awk '{print $1}'|xargs);do
+    if [ "X${cur_ver}" != "X" ];then
+        echo " | \c"
+    fi
+    cur_ver=$(docker inspect -f '{{ .Config.Image }}' ${cont}|egrep -o '[0-9\.]+$')
+    echo "${cont}:ES-v${cur_ver}\c"
+done
+echo ""
 echo "Which instance should I shutdown? (0/1/2) \c"
 read inst
 cur_ver=$(docker inspect -f '{{ .Config.Image }}' es_es${inst}_1|egrep -o '[0-9\.]+$')
