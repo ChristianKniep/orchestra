@@ -1,5 +1,5 @@
 es:
-    image: qnib/elasticsearch:1.7
+    image: qnib/elasticsearch:1.2
     dns: 127.0.0.1
     environment:
     - DC_NAME=dc1
