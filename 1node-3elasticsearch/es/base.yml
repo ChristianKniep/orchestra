@@ -4,7 +4,7 @@ es:
     environment:
     - DC_NAME=dc1
     - ES_CLUSTER_NAME=testcluster
-    - FORWARD_TO_LOGSTASH=false
+    - FORWARD_TO_LOGSTASH=true
     - COLLECT_METRICS=true
     - SKIP_PSWATCH=true
     - BOOTSTRAP_CONSUL=false
