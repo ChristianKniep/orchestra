@@ -21,6 +21,7 @@ carbon:
   - FORWARD_TO_LOGSTASH=false
   - COLLECT_METRICS=true
   - CNT_TYPE=service
+  - CARBON_METRICS_ENTRY=true
   volumes:
   - /var/lib/carbon/whisper/
   dns: 127.0.0.1
