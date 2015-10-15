@@ -60,7 +60,7 @@ grafana:
   hostname: grafana
   privileged: true
   volumes:
-   - ./dash/grafana/:/opt/grafana-1.9.1/app/dashboards/
+   - ./dash/grafana/:/var/www/grafana/app/dashboards/
   links:
    - consul:consul
 
