@@ -55,11 +55,10 @@ fi
 echo "Shutdown ES instance es${inst}: curl -s -XPOST 'http://${DHOST}:921${inst}/_cluster/nodes/_local/_shutdown'"
 logit "es${inst} shutdown ;; curl -s -XPOST 'http://${DHOST}:921${inst}/_cluster/nodes/_local/_shutdown'"
 logit $(curl -s -XPOST "http://${DHOST}:921${inst}/_cluster/nodes/_local/_shutdown")
-sleep 5
+sleep 2
 echo "kill instance: docker-compose kill es${inst}; docker-compose rm --force"
-logit "es${inst} removal ;; docker-compose kill es${inst}; docker-compose rm --force"
 docker-compose kill es${inst}; docker-compose rm --force
-logit "es${inst} removal ;; done"
+logit "es${inst} removed"
 sleep 2
 echo "start new instance: docker-compose up -d es${inst}"
 logit "es${inst} start ;; docker-compose up -d es${inst}"
