@@ -6,9 +6,11 @@
       "title": "EventsDash",
       "hits": 0,
       "description": "",
-      "panelsJSON": "[{\"col\":1,\"columns\":[\"message\"],\"id\":\"EventSearch\",\"row\":3,\"size_x\":12,\"size_y\":3,\"sort\":[\"@timestamp\",\"desc\"],\"type\":\"search\"},{\"id\":\"EventSparks\",\"type\":\"visualization\",\"size_x\":12,\"size_y\":2,\"col\":1,\"row\":1}]",
+      "panelsJSON": "[{\"col\":1,\"columns\":[\"message\"],\"id\":\"EventSearch\",\"row\":3,\"size_x\":12,\"size_y\":9,\"sort\":[\"@timestamp\",\"desc\"],\"type\":\"search\"},{\"id\":\"EventSparks\",\"type\":\"visualization\",\"size_x\":12,\"size_y\":2,\"col\":1,\"row\":1}]",
       "version": 1,
-      "timeRestore": false,
+      "timeRestore": true,
+      "timeTo": "now",
+      "timeFrom": "now-30m",
       "kibanaSavedObjectMeta": {
         "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
       }
@@ -30,7 +32,7 @@
       ],
       "version": 1,
       "kibanaSavedObjectMeta": {
-        "searchSourceJSON": "{\"index\":\"logstash-*\",\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}},\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"fragment_size\":2147483647},\"filter\":[]}"
+        "searchSourceJSON": "{\"index\":\"logstash-*\",\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}},\"highlight\":{\"pre_tags\":[\"@kibana-highlighted-field@\"],\"post_tags\":[\"@/kibana-highlighted-field@\"],\"fields\":{\"*\":{}},\"fragment_size\":2147483647},\"filter\":[{\"meta\":{\"disabled\":false,\"index\":\"logstash-*\",\"key\":\"program\",\"negate\":true,\"value\":\"kernel\"},\"query\":{\"match\":{\"program\":{\"query\":\"kernel\",\"type\":\"phrase\"}}}}]}"
       }
     }
   },
