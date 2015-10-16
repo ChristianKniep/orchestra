@@ -37,11 +37,16 @@ echo "Which instance should I shutdown? (0/1/2) \c"
 read inst
 cur_ver=$(docker inspect -f '{{ .Config.Image }}' es_es${inst}_1|egrep -o '[0-9\.]+$')
 if [ "X${es_ver}" == "X${cur_ver}" ];then
-   echo "C'mon, the current '${cur_ver}' and the new version '${es_ver}' is the same... you are sure? Proceed? [Y/n] \c"
+   echo "C'mon, the current '${cur_ver}' and the new version '${es_ver}' is the same... Which version should be put into the compose file? \c"
+   read ver
+   if [ "X${ver}" != "X" ];then
+      sed -i '' -e "s/:${cur_ver}/:${ver}/" base.yml
+      go=y
+   fi
 else
    echo "Current container runs version '${cur_ver}', new instance will use '${es_ver}'. Proceed? [Y/n] \c"
+    read go
 fi
-read go
 if [ "X${go}" == "Xn" ];then
    echo " ABORT!"
    exit 0
@@ -61,3 +66,5 @@ logit "es${inst} start ;; docker-compose up -d es${inst}"
 docker-compose up -d es${inst}
 logit "es${inst} wait for es to return 200"
 wait_es ${inst}
+logit "es{$inst} disable cluster.routing.allocation.disk.threshold"
+curl -XPUT ${DHOST}:921${inst}/_cluster/settings -d '{"transient" : {"cluster.routing.allocation.disk.threshold_enabled" : false}}';echo
