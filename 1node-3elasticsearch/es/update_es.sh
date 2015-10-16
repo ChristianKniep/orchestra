@@ -66,5 +66,5 @@ logit "es${inst} start ;; docker-compose up -d es${inst}"
 docker-compose up -d es${inst}
 logit "es${inst} wait for es to return 200"
 wait_es ${inst}
-logit "es{$inst} disable cluster.routing.allocation.disk.threshold"
+logit "es${inst} disable cluster.routing.allocation.disk.threshold"
 curl -XPUT ${DHOST}:921${inst}/_cluster/settings -d '{"transient" : {"cluster.routing.allocation.disk.threshold_enabled" : false}}';echo
