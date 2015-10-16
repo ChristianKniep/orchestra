@@ -148,11 +148,29 @@ logstash:
     - DC_NAME=dc1
     - BOOTSTRAP_CONSUL=false
     - RUN_SERVER=false
+    links:
+    - consul:consul
+    volumes:
+    - ./logstash/meta/etc/:/etc/logstash/conf.d/
+    - ./logstash/bin:/usr/local/logstash/bin/
+
+heartbeat:
+    image: qnib/logger
+    hostname: heartbeat
+    dns: 127.0.0.1
+    dns_search:
+    - node.consul
+    - service.consul
+    environment:
+    - FORWARD_TO_HEKA=false
+    - DC_NAME=dc1
+    - BOOTSTRAP_CONSUL=false
+    - RUN_SERVER=false
     - SUPERVISOR_START_EXTERNAL=/usr/local/logstash/bin/query_hb.sh
     links:
     - consul:consul
     volumes:
-    - ./logstash/etc/:/etc/logstash/conf.d/
+    - ./logstash/heartbeat/etc/:/etc/logstash/conf.d/
     - ./logstash/bin:/usr/local/logstash/bin/
 
 elasticsearch:
