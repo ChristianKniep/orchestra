@@ -173,6 +173,15 @@ heartbeat:
     - ./logstash/heartbeat/etc/:/etc/logstash/conf.d/
     - ./logstash/bin:/usr/local/logstash/bin/
 
+es-lb:
+  image: qnib/es-lb
+  dns: 127.0.0.1
+  hostname: es-lb
+  links:
+   - consul:consul
+  environment:
+   - DC_NAME=dc1
+
 elasticsearch:
     image: qnib/elasticsearch:1.7
     dns: 127.0.0.1
