@@ -9,7 +9,7 @@ function logit {
 
 function wait_es {
     # wait for es to come up
-    if [ $(curl -s ${DHOST}:921${1}|grep status|grep -c 200) -ne 1 ];then
+    if [ $(curl -s ${DHOST}:922${1}|grep status|grep -c 200) -ne 1 ];then
         sleep 1
         wait_es ${1}
     else
@@ -52,9 +52,9 @@ if [ "X${go}" == "Xn" ];then
    exit 0
 fi
 
-echo "Shutdown ES instance es${inst}: curl -s -XPOST 'http://${DHOST}:921${inst}/_cluster/nodes/_local/_shutdown'"
-logit "es${inst} shutdown ;; curl -s -XPOST 'http://${DHOST}:921${inst}/_cluster/nodes/_local/_shutdown'"
-logit $(curl -s -XPOST "http://${DHOST}:921${inst}/_cluster/nodes/_local/_shutdown")
+echo "Shutdown ES instance es${inst}: curl -s -XPOST 'http://${DHOST}:922${inst}/_cluster/nodes/_local/_shutdown'"
+logit "es${inst} shutdown ;; curl -s -XPOST 'http://${DHOST}:922${inst}/_cluster/nodes/_local/_shutdown'"
+logit $(curl -s -XPOST "http://${DHOST}:922${inst}/_cluster/nodes/_local/_shutdown")
 sleep 2
 echo "kill instance: docker-compose kill es${inst}; docker-compose rm --force"
 docker-compose kill es${inst}; docker-compose rm --force
@@ -66,4 +66,4 @@ docker-compose up -d es${inst}
 logit "es${inst} wait for es to return 200"
 wait_es ${inst}
 logit "es${inst} disable cluster.routing.allocation.disk.threshold"
-curl -XPUT ${DHOST}:921${inst}/_cluster/settings -d '{"transient" : {"cluster.routing.allocation.disk.threshold_enabled" : false}}';echo
+curl -XPUT ${DHOST}:922${inst}/_cluster/settings -d '{"transient" : {"cluster.routing.allocation.disk.threshold_enabled" : false}}';echo
