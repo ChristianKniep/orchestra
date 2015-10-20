@@ -101,24 +101,3 @@ grafana:
     volumes:
      - ./opt/grafana-1.9.1/app/dashboards/:/opt/grafana-1.9.1/app/dashboards/
     privileged: true
-
-#heka:
-#   image: qnib/heka
-#   hostname: heka
-#   dns: 127.0.0.1
-#   ports:
-#   - 4352:4352
-#   environment:
-#   - FORWARD_TO_HEKA=false
-#   - DC_NAME=dc1
-#   - BOOTSTRAP_CONSUL=false
-#   - RUN_SERVER=false
-#   links:
-#   - consul:consul
-#   volumes:
-#   - ./heka/etc/:/etc/heka/
-#   - ./heka/lua/:/usr/share/heka/lua/
-#   - /proc/stat:/host/proc/stat:ro
-#   - /sys/block/sda/stat:/host/sys/block/sda/stat:ro
-#   - /proc/meminfo:/host/proc/meminfo:ro
-#   - /proc/loadavg:/host/proc/loadavg:ro
