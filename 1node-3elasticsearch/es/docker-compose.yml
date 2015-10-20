@@ -4,7 +4,7 @@ es0:
       service: es
     hostname: es0
     ports:
-     - "9210:9200"
+     - "9220:9200"
     environment:
     - ES_TAGS=es,es0
     external_links:
@@ -16,7 +16,7 @@ es1:
       service: es
     hostname: es1
     ports:
-     - "9211:9200"
+     - "9221:9200"
     environment:
     - ES_TAGS=es,es1
     external_links:
@@ -28,7 +28,7 @@ es2:
       service: es
     hostname: es2
     ports:
-     - "9212:9200"
+     - "9222:9200"
     environment:
     - ES_TAGS=es,es2
     external_links:
