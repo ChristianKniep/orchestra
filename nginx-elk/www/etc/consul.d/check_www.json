@@ -1,0 +1,14 @@
+{
+  "services": [
+    {
+        "id": "www",
+        "name": "www",
+        "tags": [],
+        "port": 80,
+        "checks": [{
+            "script": "curl -s http://localhost:80",
+            "interval": "10s"
+        }]
+    }
+  ]
+}
