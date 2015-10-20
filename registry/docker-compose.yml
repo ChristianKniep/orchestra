@@ -4,5 +4,15 @@ registry:
     - 5000:5000
     environment:
     - STORAGE_PATH=/registry
+    - SEARCH_BACKEND=sqlalchemy
     volumes:
     - /var/lib/docker-registry/:/registry/ 
+
+registryUI:
+  image: hyper/docker-registry-web
+  ports:
+    - "8080:8080"
+  links:
+    - registry
+  environment:
+   REGISTRY_HOST: 192.168.99.100
