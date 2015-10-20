@@ -177,6 +177,8 @@ es-lb:
   image: qnib/es-lb
   dns: 127.0.0.1
   hostname: es-lb
+  ports:
+   - "9210:9200"
   links:
    - consul:consul
   environment:
