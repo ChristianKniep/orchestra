@@ -8,14 +8,35 @@ consul:
 
 lb:
     build: lb
+    privileged: true
     ports:
      - "8000:80"
-    environment:
-     - SUPERVISOR_SRV_SYSLOG=nginx
     links:
     - consul:consul
     dns: 127.0.0.1
     hostname: loadbalancer
+    environment:
+     - SUPERVISOR_SRV_SYSLOG=nginx
+
+logstash:
+    image: qnib/logger
+    hostname: logger
+    privileged: true
+    dns: 127.0.0.1
+    ports:
+     - 5514:5514
+    dns_search:
+     - node.consul
+     - service.consul
+    environment:
+     - FORWARD_TO_HEKA=false
+     - DC_NAME=dc1
+     - BOOTSTRAP_CONSUL=false
+     - RUN_SERVER=false
+    links:
+     - consul:consul
+    volumes:
+     - ./logstash/etc/:/etc/logstash/conf.d/
 
 www:
     build: www
@@ -42,26 +63,6 @@ elasticsearch:
     links:
        - consul:consul
     privileged: true
-
-logstash:
-    image: qnib/logger
-    hostname: logger
-    dns: 127.0.0.1
-    ports:
-     - 5514:5514
-    dns_search:
-    - node.consul
-    - service.consul
-    environment:
-    - FORWARD_TO_HEKA=false
-    - DC_NAME=dc1
-    - BOOTSTRAP_CONSUL=false
-    - RUN_SERVER=false
-    links:
-    - consul:consul
-    volumes:
-    - ./logstash/etc/:/etc/logstash/conf.d/
-    - ./logstash/bin:/usr/local/logstash/bin/
 
 kibana3:
   image: qnib/kibana3
