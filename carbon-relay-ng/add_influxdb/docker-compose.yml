@@ -7,7 +7,7 @@ influxdb:
     environment:
      - DC_NAME=dc1
     external_links:
-     - carbonrelayng_carbon_1:consul
+     - carbonrelayng_consul_1:consul
     ports:
      - 4242:4242
      - 8083:8083
