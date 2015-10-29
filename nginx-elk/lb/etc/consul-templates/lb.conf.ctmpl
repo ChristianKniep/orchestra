@@ -1,6 +1,6 @@
 upstream myapp1 {{"{"}}
     {{range service "www" "passing"}}
-    server {{.Address}};{{end}}
+    server {{.Address}}:{{.Port}};{{end}}
 {{"}"}}
 
 server {{"{"}}

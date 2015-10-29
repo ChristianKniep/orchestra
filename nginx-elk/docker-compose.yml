@@ -40,9 +40,9 @@ logstash:
 
 www:
     build: www
-    links:
-    - consul:consul
     dns: 127.0.0.1
+    links:
+     - consul:consul
 ## ELK
 elasticsearch:
     image: qnib/elasticsearch:1.7

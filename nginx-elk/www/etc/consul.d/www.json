@@ -6,7 +6,7 @@
         "tags": [],
         "port": 80,
         "checks": [{
-            "script": "curl -s http://localhost:80",
+            "script": "supervisorctl status nginx | grep RUNNING",
             "interval": "10s"
         }]
     }
