@@ -2,13 +2,10 @@ registry:
     image: registry:2
     ports:
     - 5000:5000
-    environment:
-    - STORAGE_PATH=/registry
-    - SEARCH_BACKEND=sqlalchemy
     volumes:
-    - /var/lib/docker-registry/:/registry/ 
+    - /registry:/var/lib/registry
 
-registryUI:
+HyperRegUI:
   image: hyper/docker-registry-web
   ports:
     - "8080:8080"
@@ -16,3 +13,14 @@ registryUI:
     - registry
   environment:
    REGISTRY_HOST: 192.168.99.100
+
+#kwkRegUI:
+#   image: konradkleine/docker-registry-frontend
+#   ports:
+#    - "80"
+#   environment:
+#    - ENV_DOCKER_REGISTRY_HOST=192.168.99.100
+#    - ENV_DOCKER_REGISTRY_PORT=5000
+#   links:
+#    - registry
+    
