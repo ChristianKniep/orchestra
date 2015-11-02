@@ -75,7 +75,7 @@ elasticsearch:
 kibana3:
     image: qnib/kibana3
     ports:
-    - "8081:80"
+    - "8181:80"
     environment:
     - DC_NAME=dc1
     - FORWARD_TO_LOGSTASH=false
@@ -91,7 +91,7 @@ grafana:
     image: qnib/grafana
     hostname: grafana
     ports:
-    - "8080:80"
+    - "8182:80"
     dns: 127.0.0.1
     environment:
      - DC_NAME=dc1
