@@ -1,0 +1,14 @@
+{
+  "services": [
+    {
+        "id": "www",
+        "name": "www",
+        "tags": [],
+        "port": 80,
+        "checks": [{
+            "script": "supervisorctl status nginx | grep RUNNING",
+            "interval": "10s"
+        }]
+    }
+  ]
+}
