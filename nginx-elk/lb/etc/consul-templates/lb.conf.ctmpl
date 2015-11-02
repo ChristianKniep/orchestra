@@ -1,0 +1,12 @@
+upstream myapp1 {{"{"}}
+    {{range service "www" "passing"}}
+    server {{.Address}}:{{.Port}};{{end}}
+{{"}"}}
+
+server {{"{"}}
+    listen 80;
+
+    location / {{"{"}}
+        proxy_pass http://myapp1;
+    {{"}"}}
+{{"}"}}

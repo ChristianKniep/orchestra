@@ -1,0 +1,82 @@
+consul:
+    image: qnib/consul
+    ports:
+     - "8500:8500"
+    hostname: consul
+    dns: 127.0.0.1
+    privileged: true
+
+lb:
+    build: lb
+    privileged: true
+    ports:
+     - "8000:80"
+    links:
+    - consul:consul
+    dns: 127.0.0.1
+    hostname: loadbalancer
+    environment:
+     - SUPERVISOR_SRV_SYSLOG=nginx
+
+logstash:
+    image: qnib/logger
+    hostname: logger
+    privileged: true
+    dns: 127.0.0.1
+    ports:
+     - 5514:5514
+    dns_search:
+     - node.consul
+     - service.consul
+    environment:
+     - FORWARD_TO_HEKA=false
+     - DC_NAME=dc1
+     - BOOTSTRAP_CONSUL=false
+     - RUN_SERVER=false
+    links:
+     - consul:consul
+    volumes:
+     - ./logstash/etc/:/etc/logstash/conf.d/
+
+www:
+    build: www
+    dns: 127.0.0.1
+    links:
+     - consul:consul
+## ELK
+elasticsearch:
+    image: qnib/elasticsearch:1.7
+    dns: 127.0.0.1
+    hostname: elasticsearch
+    ports:
+     - "9200:9200"
+    environment:
+    - DC_NAME=dc1
+    - ES_CLUSTER_NAME=elk
+    - FORWARD_TO_LOGSTASH=false
+    - COLLECT_METRICS=false
+    - SKIP_PSWATCH=true
+    - BOOTSTRAP_CONSUL=false
+    - RUN_SERVER=false
+    volumes:
+    - /var/lib/elasticsearch
+    links:
+       - consul:consul
+    privileged: true
+
+kibana3:
+  image: qnib/kibana3
+  ports:
+   - "80:80"
+  environment:
+  - DC_NAME=dc1
+  - FORWARD_TO_LOGSTASH=false
+  - CNT_TYPE=service
+  - SKIP_PSWATCH=true
+  - COLLECT_METRICS=false
+  - HTTPPORT=9200
+  dns: 127.0.0.1
+  hostname: kibana3
+  privileged: true
+  links:
+  - consul:consul
