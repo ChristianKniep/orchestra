@@ -1,19 +1,13 @@
-golang:
-    hostname: golang
-    dns: 127.0.0.1
-    dns_search:
-    - node.consul
-    - service.consul
-    image: qnib/golang
+consul:
+    image: qnib/consul
+    ports:
+     - "8500"
     environment:
-     - DC_NAME=dc1
-     - BOOTSTRAP_CONSUL=false
-     - RUN_SERVER=false
-     - SKIP_PSWATCH=true
-    volumes:
-     - ./src/:/root/src/
-    external_links:
-    - dockerhost_consul_1:consul
+    - DC_NAME=guido
+    - RUN_SERVER=true
+    - BOOTSTRAP_CONSUL=true
+    hostname: consul
+    dns: 127.0.0.1
     privileged: true
 
 zkui:
@@ -24,11 +18,10 @@ zkui:
     - service.consul
     image: qnib/zkui
     environment:
-    - DC_NAME=dc1
+    - DC_NAME=guido
     links:
     - zookeeper:zookeeper
-    external_links:
-    - dockerhost_consul_1:consul
+    - consul:consul
     ports:
     - 9090:9090
     privileged: true
@@ -41,9 +34,9 @@ zookeeper:
     - service.consul
     image: qnib/zookeeper
     environment:
-    - DC_NAME=dc1
-    external_links:
-    - dockerhost_consul_1:consul
+    - DC_NAME=guido
+    links:
+     - consul:consul
     privileged: true
 
 kafkaMonitor:
@@ -54,12 +47,13 @@ kafkaMonitor:
     - node.consul
     - service.consul
     environment:
-    - DC_NAME=dc1
+    - DC_NAME=guido
     - FORWARD_TO_KAFKA=false
     external_links:
     - dockerhost_consul_1:consul
     links:
-    - kafka0:kafka
+     - consul:consul
+     - kafka0:kafka
     ports:
     - 18080:8080
     privileged: true
@@ -71,12 +65,11 @@ kafkaMgr:
     dns_search:
      - node.consul
     environment:
-     - DC_NAME=dc1
+     - DC_NAME=guido
      - BOOTSTRAP_CONSUL=false
      - RUN_SERVER=false
-    external_links:
-    - dockerhost_consul_1:consul
     links:
+     - consul:consul
      - kafka0:kafka
     ports:
      - 19000:9000
@@ -87,14 +80,13 @@ kafka0:
       file: base.yml
       service: kafka811
     environment:
-    - DC_NAME=dc1
+    - DC_NAME=guido
     - BARE_HOST=kafka0
     - KAFKA_MIN_INSTANCES=3
     - KAFKA_BOOTSTRAP_TOPICS=syslog:2,ring0:3,ring1:3,ring2:3,ring3:3,ring4:3,ring5:3,final:3
     hostname: kafka0
-    external_links:
-    - dockerhost_consul_1:consul
     links:
+    - consul:consul
     - zookeeper:zookeeper
 
 kafka1:
@@ -102,12 +94,11 @@ kafka1:
       file: base.yml
       service: kafka811
     environment:
-    - DC_NAME=dc1
+    - DC_NAME=guido
     - BARE_HOST=kafka1
     hostname: kafka1
-    external_links:
-    - dockerhost_consul_1:consul
     links:
+    - consul:consul
     - zookeeper:zookeeper
 
 kafka2:
@@ -116,11 +107,10 @@ kafka2:
       service: kafka811
     hostname: kafka2
     environment:
-    - DC_NAME=dc1
+    - DC_NAME=dguido
     - BARE_HOST=kafka2
-    external_links:
-    - dockerhost_consul_1:consul
     links:
+    - consul:consul
     - zookeeper:zookeeper
 
 kafka3:
@@ -131,29 +121,7 @@ kafka3:
     environment:
     - DC_NAME=dc1
     - BARE_HOST=kafka3
-    external_links:
-    - dockerhost_consul_1:consul
     links:
+    - consul:consul
     - zookeeper:zookeeper
 
-heka:
-    image: qnib/heka
-    hostname: heka
-    dns: 127.0.0.1
-    dns_search:
-    - node.consul
-    - service.consul
-    ports:
-    - 14352:4352
-    environment:
-    - FORWARD_TO_HEKA=false
-    - DC_NAME=dc1
-    - BOOTSTRAP_CONSUL=false
-    - RUN_SERVER=false
-    - SUPERVISOR_SKIP_SRV=heka
-    external_links:
-    - dockerhost_consul_1:consul
-    volumes:
-    - /Users/ckniep/docker/docker-heka/opt/qnib/heka/bin/:/opt/qnib/heka/bin/
-    - ./heka/etc/:/etc/heka/
-    - ./heka/lua/:/usr/share/heka/lua/
