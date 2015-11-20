@@ -2,6 +2,9 @@ consul:
     image: qnib/consul
     ports:
      - "8500:8500"
+    environment:
+     - RUN_SERVER=true
+     - BOOTSTRAP_CONSUL=true
     hostname: consul
     dns: 127.0.0.1
     privileged: true
