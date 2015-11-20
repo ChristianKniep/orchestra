@@ -16,7 +16,7 @@ carbon:
     environment:
      - DC_NAME=dc1
      - SERVICE_2003_NAME=carbon
-     - FORWARD_TO_LOGSTASH=false
+     - FORWARD_TO_LOGSTASH=true
      - SKIP_PSWATCH=true
     links:
     - consul:consul
@@ -30,6 +30,8 @@ gapi:
     environment:
      - DC_NAME=dc1
      - SKIP_PSWATCH=true
+     - FORWARD_TO_LOGSTASH=true
+     - COLLECT_METRICS=true
      - SERVICE_8888_NAME=graphite-api
     ports:
      - 8888:80
@@ -48,7 +50,8 @@ logger:
      - "5514:5514"
     environment:
      - DC_NAME=dc1
-     - FORWARD_TO_LOGSTASH=false
+     - FORWARD_TO_LOGSTASH=true
+     - COLLECT_METRICS=true
      - CNT_TYPE=service
     dns: 127.0.0.1
     hostname: logger
@@ -61,8 +64,8 @@ elasticsearch:
     environment:
     - DC_NAME=dc1
     - ES_CLUSTER_NAME=qnib2015
-    - FORWARD_TO_LOGSTASH=false
-    - COLLECT_METRICS=false
+    - FORWARD_TO_LOGSTASH=true
+    - COLLECT_METRICS=true
     - SKIP_PSWATCH=true
     volumes:
     - /var/lib/elasticsearch
