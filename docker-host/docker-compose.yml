@@ -104,3 +104,62 @@ grafana:
     volumes:
      - ./opt/grafana-1.9.1/app/dashboards/:/opt/grafana-1.9.1/app/dashboards/
     privileged: true
+
+gweb:
+    hostname: graphite-web
+    dns: 127.0.0.1
+    image: qnib/graphite-web
+    environment:
+     - DC_NAME=dc1
+     - SKIP_PSWATCH=true
+     - SERVICE_8888_NAME=graphite-web
+    ports:
+     - 80:80
+    links:
+     - consul:consul
+     - carbon:carbon
+    volumes_from:
+     - carbon
+    privileged: true
+
+mongodb:
+    image: qnib/mongodb
+    dns: 127.0.0.1
+    hostname: mongodb
+    ports:
+     - "27017:27017"
+     - "28017:28017"
+    links:
+     - consul:consul
+    privileged: true
+
+rocketchat:
+    image: qnib/rocketchat
+    dns: 127.0.0.1
+    hostname: rocketchat
+    ports:
+     - "3000:3000"
+    links:
+     - consul:consul
+     - mongodb:db
+    environment:
+    - RUN_SERVER=false
+    - BOOTSTRAP_CONSUL=false
+    privileged: true
+
+hubot:
+    image: qnib/hubot-rocketchat
+    #dns: 127.0.0.1
+    hostname: hubot
+    links:
+     - consul:consul
+    environment:
+    - RUN_SERVER=false
+    - BOOTSTRAP_CONSUL=false
+    - ROCKETCHAT_URL=192.168.99.100:3000
+    - ROCKETCHAT_ROOM=GENERAL
+    - ROCKETCHAT_USER=hubot
+    - ROCKETCHAT_PASSWORD=hubot
+    - BOT_NAME=bot
+    - HUBOT_GRAPHITE_URL=http://192.168.99.100
+    privileged: true
