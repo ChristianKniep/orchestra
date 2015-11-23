@@ -5,14 +5,30 @@ consul:
     hostname: consul
     dns: 127.0.0.1
     privileged: true
+    environment:
+     - RUN_SERVER=true
+     - BOOTSTRAP_CONSUL=true
 
-terminal:
+mongodb:
+    image: qnib/mongodb
+    dns: 127.0.0.1
+    hostname: mongodb
+    ports:
+     - "27017:27017"
+     - "28017:28017"
+    links:
+     - consul:consul
+    environment:
+     - MONGO_RESTORE=/backup/rocketchat_init.tar
+    privileged: true
+
+rocketchat:
     image: qnib/rocketchat
     dns: 127.0.0.1
     hostname: rocketchat
+    ports:
+     - "3000:3000"
     links:
      - consul:consul
-    ports:
-     - 27017:27017
-     - 3000:3000
-    privileged: false
+     - mongodb:db
+    privileged: true
