@@ -3,6 +3,7 @@ consul:
     ports:
      - "8500:8500"
     hostname: consul
+    container_name: consul
     dns: 127.0.0.1
     privileged: true
     environment:
@@ -13,6 +14,7 @@ mongodb:
     image: qnib/mongodb
     dns: 127.0.0.1
     hostname: mongodb
+    container_name: mongodb
     ports:
      - "27017:27017"
      - "28017:28017"
@@ -26,6 +28,7 @@ rocketchat:
     image: qnib/rocketchat
     dns: 127.0.0.1
     hostname: rocketchat
+    container_name: rocketchat
     ports:
      - "3000:3000"
     links:
