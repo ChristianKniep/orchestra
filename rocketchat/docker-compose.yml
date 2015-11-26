@@ -7,8 +7,8 @@ consul:
     dns: 127.0.0.1
     privileged: true
     environment:
-     - RUN_SERVER=true
-     - BOOTSTRAP_CONSUL=true
+    - RUN_SERVER=true
+    - BOOTSTRAP_CONSUL=true
 
 mongodb:
     image: qnib/mongodb
@@ -20,9 +20,10 @@ mongodb:
      - "28017:28017"
     links:
      - consul:consul
+    privileged: true
     environment:
      - MONGO_RESTORE=/backup/rocketchat_init.tar
-    privileged: true
+     - COLLECT_METRICS=true
 
 rocketchat:
     image: qnib/rocketchat
@@ -34,4 +35,73 @@ rocketchat:
     links:
      - consul:consul
      - mongodb:db
+    environment:
+     - COLLECT_METRICS=true
     privileged: true
+
+hubot:
+    image: qnib/hubot-rocketchat
+    dns: 172.17.0.1
+    hostname: hubot
+    container_name: hubot
+    links:
+     - consul:consul
+    environment:
+    - RUN_SERVER=false
+    - BOOTSTRAP_CONSUL=false
+    - ROCKETCHAT_URL=192.168.99.100:3000
+    - ROCKETCHAT_ROOM=GENERAL
+    - ROCKETCHAT_USER=hubot
+    - ROCKETCHAT_PASSWORD=hubot
+    - BOT_NAME=bot
+    - HUBOT_GRAPHITE_URL=http://192.168.99.100:8888
+    privileged: true
+
+carbon:
+    image: qnib/carbon
+    privileged: true
+    ports:
+     - "2003:2003"
+    environment:
+     - DC_NAME=dc1
+     - CARBON_METRICS_ENTRY=true
+     - COLLECT_METRICS=true
+    dns: 127.0.0.1
+    hostname: carbon
+    container_name: carbon
+    volumes:
+     - /var/lib/carbon/whisper/
+    links:
+     - consul:consul
+
+gapi:
+    hostname: graphite-api
+    container_name: graphite-api
+    dns: 127.0.0.1
+    image: qnib/graphite-api
+    environment:
+     - DC_NAME=dc1
+     - SKIP_PSWATCH=true
+     - COLLECT_METRICS=true
+    ports:
+     - 8888:80
+    links:
+     - consul:consul
+     - carbon:carbon
+    volumes_from:
+     - carbon
+    privileged: true
+
+grafana:
+    image: qnib/grafana
+    ports:
+     - "8080:80"
+    environment:
+     - DC_NAME=dc1
+     - COLLECT_METRICS=true
+    dns: 127.0.0.1
+    hostname: grafana
+    container_name: grafana
+    links:
+     - consul:consul
+     - gapi:gapi
