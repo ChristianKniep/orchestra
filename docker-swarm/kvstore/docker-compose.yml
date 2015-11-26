@@ -1,0 +1,17 @@
+consul:
+    image: qnib/consul
+    environment:
+     - RUN_SERVER=true
+     - BOOTSTRAP_CONSUL=true
+    ports:
+     - "8500:8500"
+     - "8400:8400"
+     - "8302:8302/tcp"
+     - "8302:8302/udp"
+     - "8301:8301/tcp"
+     - "8301:8301/udp"
+     - "8300:8300"
+    container_name: "consul"
+    hostname: consul
+    dns: 127.0.0.1
+    privileged: true

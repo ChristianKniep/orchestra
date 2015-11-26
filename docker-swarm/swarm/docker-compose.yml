@@ -1,0 +1,13 @@
+consul0:
+    image: qnib/consul
+    environment:
+     - RUN_SERVER=true
+     - BOOTSTRAP_CONSUL=false
+     - CONSUL_CLUSTER_IPS=192.168.99.113
+     - constraint:node==swarm-0
+    ports:
+     - "8500:8500"
+    container_name: "consul0"
+    hostname: consul
+    dns: 127.0.0.1
+    privileged: true
