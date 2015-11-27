@@ -1,0 +1,25 @@
+consul:
+    hostname: consul
+    image: qnib/consul
+    environment:
+     - DC_NAME=dc1
+     - BOOTSTRAP_CONSUL=true
+     - RUN_SERVER=true
+    ports:
+     - "8500:8500"
+    dns: 127.0.0.1
+
+sentry:
+    privileged: true
+    hostname: sentry
+    container_name: sentry
+    image: qnib/sentry
+    environment:
+     - DC_NAME=dc1
+     - SENTRY_URL_PREFIX=http://192.168.99.100:9000
+    ports:
+     - "9000:9000"
+    dns: 127.0.0.1
+    links:
+     - consul:consul
+    
