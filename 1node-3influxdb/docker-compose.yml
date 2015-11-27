@@ -1,0 +1,69 @@
+consul:
+    extends:
+      file: base.yml
+      service: base
+    hostname: consul
+    container_name: consul
+    image: qnib/consul
+    environment:
+     - RUN_SERVER=true
+     - BOOTSTRAP_CONSUL=true
+    ports:
+     - "8500:8500"
+
+relay:
+    extends:
+      file: base.yml
+      service: base
+    image: qnib/carbon-relay-ng
+    hostname: carbon-relay-ng
+    container_name: carbon-relay-ng
+    ports:
+     - 8081:8081
+    links:
+     - consul:consul
+
+leader:
+    extends:
+      file: base.yml
+      service: influxdb
+    hostname: leader
+    container_name: leader
+    links:
+    - consul:consul
+
+follower0:
+    extends:
+      file: base.yml
+      service: influxdb
+    hostname: follower0
+    container_name: follower0
+    environment:
+    - INFLUXDB_CLUSTER_PEERS=leader:8088
+    - SUPERVISOR_SKIP_SRV=influxdb
+    links:
+    - consul:consul
+
+follower1:
+    extends:
+      file: base.yml
+      service: influxdb
+    hostname: follower1
+    container_name: follower1
+    environment:
+    - INFLUXDB_CLUSTER_PEERS=leader:8088,follower0:8088
+    - SUPERVISOR_SKIP_SRV=influxdb
+    links:
+    - consul:consul
+
+grafana2:
+    extends:
+      file: base.yml
+      service: base
+    image: qnib/grafana2
+    container_name: grafana2
+    ports:
+     - "3000:3000"
+    hostname: grafana
+    links:
+    - consul:consul
