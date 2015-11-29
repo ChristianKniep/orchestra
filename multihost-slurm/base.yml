@@ -1,5 +1,7 @@
 base:
     dns: 127.0.0.1
+    dns_search:
+     - node.consul
     privileged: true
 
 slurmctld:

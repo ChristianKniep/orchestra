@@ -17,7 +17,7 @@ slurmctld:
    links:
     - consul:consul
 
-fedora0:
+fd20:
    extends: 
      file: ../base.yml
      service: slurmd
