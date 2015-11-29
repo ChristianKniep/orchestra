@@ -1,0 +1,8 @@
+fd20:
+   extends: 
+     file: ../base.yml
+     service: slurmd
+   hostname: fd20_${CNT}
+   container_name: fd20_${CNT}
+   environment:
+    - CONSUL_CLUSTER_IPS=${CONSUL_IP}

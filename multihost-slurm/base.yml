@@ -2,7 +2,13 @@ base:
     dns: 127.0.0.1
     dns_search:
      - node.consul
+    net: global
+    environment:
+     - COLLECT
     privileged: true
+    ### Provide a shared filesystem among all nodes
+    # volumes:
+    #  - /shared/:/shared/
 
 slurmctld:
     extends:
