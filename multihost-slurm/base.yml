@@ -1,0 +1,19 @@
+base:
+    dns: 127.0.0.1
+    privileged: true
+
+slurmctld:
+    extends:
+      file: base.yml
+      service: base
+    image: qnib/slurmctld
+    ports:
+    - "6817:6817"
+    hostname: slurmctld
+    container_name: slurmctld
+
+slurmd:
+    extends:
+      file: base.yml
+      service: base
+    image: qnib/slurmd
