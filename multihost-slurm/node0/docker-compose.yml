@@ -1,0 +1,27 @@
+consul:
+    image: qnib/consul
+    environment:
+     - RUN_SERVER=true
+     - BOOTSTRAP_CONSUL=true
+    ports:
+     - "8500:8500"
+    container_name: "consul"
+    hostname: consul
+    dns: 127.0.0.1
+    privileged: true
+
+slurmctld:
+   extends: 
+     file: ../base.yml
+     service: slurmctld
+   links:
+    - consul:consul
+
+fedora0:
+   extends: 
+     file: ../base.yml
+     service: slurmd
+   hostname: fd20_0
+   container_name: fd20_0
+   links:
+    - consul:consul
