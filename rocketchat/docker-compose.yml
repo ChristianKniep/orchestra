@@ -37,7 +37,7 @@ rocketchat:
      - mongodb:db
     environment:
      - COLLECT_METRICS=true
-     - ROOT_URL=192.168.99.100:3000
+     - ROOT_URL=http://${RKTHOST}:3000
     privileged: true
 
 hubot:
@@ -52,12 +52,12 @@ hubot:
     environment:
     - RUN_SERVER=false
     - BOOTSTRAP_CONSUL=false
-    - ROCKETCHAT_URL=192.168.99.100:3000
+    - ROCKETCHAT_URL=${RKTHOST}:3000
     - ROCKETCHAT_ROOM=GENERAL
     - ROCKETCHAT_USER=hubot
     - ROCKETCHAT_PASSWORD=hubot
     - BOT_NAME=bot
-    - HUBOT_GRAPHITE_URL=http://192.168.99.100:8888
+    - HUBOT_GRAPHITE_URL=http://${RKTHOST}:8888
     privileged: true
 
 carbon:
