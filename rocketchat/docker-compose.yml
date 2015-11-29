@@ -37,11 +37,14 @@ rocketchat:
      - mongodb:db
     environment:
      - COLLECT_METRICS=true
+     - ROOT_URL=192.168.99.100:3000
     privileged: true
 
 hubot:
     image: qnib/hubot-rocketchat
-    dns: 172.17.0.1
+    dns: 
+    - 172.17.0.1
+    - 8.8.8.8
     hostname: hubot
     container_name: hubot
     links:
