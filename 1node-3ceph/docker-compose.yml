@@ -1,0 +1,58 @@
+consul:
+    extends:
+      file: base.yml
+      service: base
+    hostname: consul
+    container_name: consul
+    image: qnib/consul
+    environment:
+     - RUN_SERVER=true
+     - BOOTSTRAP_CONSUL=true
+    ports:
+     - "8500:8500"
+
+ceph_cfg:
+    image: busybox
+    command: tail -f /dev/null
+    hostname: ceph-cfg
+    container_name: ceph-cfg
+    volumes:
+     - /etc/ceph/
+    
+
+mon0:
+    extends:
+      file: base.yml
+      service: base
+    image: qnib/ceph-mon
+    hostname: mon0
+    container_name: mon0
+    links:
+     - consul:consul
+    volumes_from:
+     - ceph_cfg
+    
+
+mds0:
+    extends:
+      file: base.yml
+      service: base
+    image: qnib/ceph-mds
+    hostname: mds0
+    container_name: mds0
+    links:
+     - consul:consul
+    volumes_from:
+     - ceph_cfg
+    environment:
+     - CEPH_MDS_NAME=mds0
+
+osd0:
+    extends:
+      file: base.yml
+      service: base
+    image: qnib/ceph-osd
+    hostname: osd0
+    container_name: osd0
+    links:
+     - consul:consul
