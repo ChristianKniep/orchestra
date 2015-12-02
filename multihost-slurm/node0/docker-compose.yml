@@ -1,0 +1,29 @@
+consul:
+   extends: 
+     file: ../base.yml
+     service: base
+   image: qnib/consul
+   environment:
+    - RUN_SERVER=true
+    - BOOTSTRAP_CONSUL=true
+   ports:
+    - "8500:8500"
+   container_name: "consul"
+   hostname: consul
+
+slurmctld:
+   extends: 
+     file: ../base.yml
+     service: slurmctld
+   environment:
+    - CONSUL_CLUSTER_IPS=${CONSUL_IP}
+
+fd20:
+   extends: 
+     file: ../base.yml
+     service: slurmd
+   hostname: fd20_0
+   container_name: fd20_0
+   environment:
+    - CONSUL_CLUSTER_IPS=${CONSUL_IP}
+
