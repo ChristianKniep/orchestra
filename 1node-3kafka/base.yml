@@ -1,67 +1,67 @@
-kafka811:
+base:
+    environment:
+     - DC_NAME=dc1
+     - COLLECT_METRICS=true
     dns: 127.0.0.1
     dns_search:
-    - node.consul
-    - service.consul
+     - node.consul
+     - service.consul
+    privileged: true
+
+kafka811:
+    extends:
+      file: base.yml
+      service: base
     image: qnib/kafka:0.8.1.1
     environment:
-     - DC_NAME=dc1
      - FORWARD_TO_KAFKA=true
      - SKIP_PSWATCH=true
-    privileged: true
 
 kafka821:
-    dns: 127.0.0.1
-    dns_search:
-    - node.consul
-    - service.consul
+    extends:
+      file: base.yml
+      service: base
     image: qnib/kafka
     environment:
-     - DC_NAME=dc1
      - FORWARD_TO_KAFKA=true
      - SKIP_PSWATCH=true
-    privileged: true
 
 kibana3:
-  image: qnib/kibana3
-  ports:
-   - "80:80"
-  environment:
-  - DC_NAME=dc1
-  - FORWARD_TO_LOGSTASH=false
-  - COLLECT_METRICS=false
-  - SKIP_PSWATCH=true
-  dns: 127.0.0.1
-  hostname: kibana3
-  privileged: true
+    extends:
+      file: base.yml
+      service: base
+    image: qnib/kibana3
+    ports:
+     - "80:80"
+    environment:
+     - FORWARD_TO_LOGSTASH=false
+     - COLLECT_METRICS=false
+     - SKIP_PSWATCH=true
+    hostname: kibana3
 
 logger:
-  image: qnib/logstash
-  ports:
-   - "5514:5514"
-  environment:
-   - DC_NAME=dc1
-   - FORWARD_TO_LOGSTASH=false
-   - COLLECT_METRICS=false
-   - SKIP_PSWATCH=true
-   - BOOTSTRAP_CONSUL=false
-   - RUN_SERVER=false
-  dns: 127.0.0.1
-  dns_search:
-   - node.consul
-  hostname: logger
-  privileged: true
+    extends:
+      file: base.yml
+      service: base
+    image: qnib/logstash
+    ports:
+     - "5514:5514"
+    environment:
+     - FORWARD_TO_LOGSTASH=false
+     - COLLECT_METRICS=false
+     - SKIP_PSWATCH=true
+    hostname: logger
 
 elasticsearch:
-  image: qnib/es-kopf
-  environment:
-  - DC_NAME=dc1
-  - ES_CLUSTER_NAME=qnib2015
-  - FORWARD_TO_LOGSTASH=false
-  - COLLECT_METRICS=false
-  - SKIP_PSWATCH=true
-  dns: 127.0.0.1
-  hostname: elasticsearch
-  volumes:
-  - /var/lib/elasticsearch
-  privileged: true
+    extends:
+      file: base.yml
+      service: base
+    image: qnib/es-kopf
+    environment:
+     - ES_CLUSTER_NAME=qnib2015
+     - FORWARD_TO_LOGSTASH=false
+     - COLLECT_METRICS=false
+     - SKIP_PSWATCH=true
+    hostname: elasticsearch
+    volumes:
+     - /var/lib/elasticsearch

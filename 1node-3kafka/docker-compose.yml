@@ -1,158 +1,144 @@
-golang:
-    hostname: golang
-    dns: 127.0.0.1
-    dns_search:
-    - node.consul
-    - service.consul
-    image: qnib/golang
+consul:
+    extends:
+      file: base.yml
+      service: base
+    hostname: consul
+    container_name: consul
+    image: qnib/consul
     environment:
-     - DC_NAME=dc1
-     - BOOTSTRAP_CONSUL=false
-     - RUN_SERVER=false
-     - SKIP_PSWATCH=true
+     - RUN_SERVER=true
+     - BOOTSTRAP_CONSUL=true
+    ports:
+     - "8500:8500"
+
+golang:
+    extends:
+      file: base.yml
+      service: base
+    hostname: golang
+    container_name: golang
+    image: qnib/golang
     volumes:
      - ./src/:/root/src/
-    external_links:
-    - dockerhost_consul_1:consul
-    privileged: true
+    links:
+    - consul:consul
 
 zkui:
+    extends:
+      file: base.yml
+      service: base
     hostname: zkui
-    dns: 127.0.0.1
-    dns_search:
-    - node.consul
-    - service.consul
+    container_name: zkui
     image: qnib/zkui
-    environment:
-    - DC_NAME=dc1
     links:
     - zookeeper:zookeeper
-    external_links:
-    - dockerhost_consul_1:consul
+    - consul:consul
     ports:
     - 9090:9090
     privileged: true
 
 zookeeper:
+    extends:
+      file: base.yml
+      service: base
     hostname: zookeeper
-    dns: 127.0.0.1
-    dns_search:
-    - node.consul
-    - service.consul
+    container_name: zookeeper
     image: qnib/zookeeper
-    environment:
-    - DC_NAME=dc1
-    external_links:
-    - dockerhost_consul_1:consul
-    privileged: true
+    links:
+    - consul:consul
 
 kafkaMonitor:
+    extends:
+      file: base.yml
+      service: base
     image: qnib/kafka-monitor
     hostname: kafka-monitor
-    dns: 127.0.0.1
-    dns_search:
-    - node.consul
-    - service.consul
+    container_name: kafka-monitor
     environment:
-    - DC_NAME=dc1
-    - FORWARD_TO_KAFKA=false
-    external_links:
-    - dockerhost_consul_1:consul
+     - FORWARD_TO_KAFKA=false
     links:
-    - kafka0:kafka
+     - consul:consul
+     - kafka0:kafka
     ports:
-    - 18080:8080
-    privileged: true
+     - 18080:8080
 
 kafkaMgr:
+    extends:
+      file: base.yml
+      service: base
     image: qnib/kafka-manager
     hostname: kafka-manager
-    dns: 127.0.0.1
-    dns_search:
-     - node.consul
-    environment:
-     - DC_NAME=dc1
-     - BOOTSTRAP_CONSUL=false
-     - RUN_SERVER=false
-    external_links:
-    - dockerhost_consul_1:consul
+    container_name: kafka-manager
     links:
+     - consul:consul
      - kafka0:kafka
     ports:
      - 19000:9000
-    privileged: true
     
 kafka0:
     extends:
       file: base.yml
       service: kafka811
     environment:
-    - DC_NAME=dc1
     - BARE_HOST=kafka0
     - KAFKA_MIN_INSTANCES=3
     - KAFKA_BOOTSTRAP_TOPICS=syslog:2,ring0:3,ring1:3,ring2:3,ring3:3,ring4:3,ring5:3,final:3
     hostname: kafka0
-    external_links:
-    - dockerhost_consul_1:consul
+    container_name: kafka0
     links:
-    - zookeeper:zookeeper
+     - zookeeper:zookeeper
+     - consul:consul
 
 kafka1:
     extends:
       file: base.yml
       service: kafka811
     environment:
-    - DC_NAME=dc1
     - BARE_HOST=kafka1
     hostname: kafka1
-    external_links:
-    - dockerhost_consul_1:consul
+    container_name: kafka1
     links:
-    - zookeeper:zookeeper
+     - zookeeper:zookeeper
+     - consul:consul
 
 kafka2:
     extends:
       file: base.yml
       service: kafka811
     hostname: kafka2
+    container_name: kafka2
     environment:
-    - DC_NAME=dc1
     - BARE_HOST=kafka2
-    external_links:
-    - dockerhost_consul_1:consul
     links:
-    - zookeeper:zookeeper
+     - zookeeper:zookeeper
+     - consul:consul
 
 kafka3:
     extends:
       file: base.yml
       service: kafka811
     hostname: kafka3
+    container_name: kafka3
     environment:
-    - DC_NAME=dc1
-    - BARE_HOST=kafka3
-    external_links:
-    - dockerhost_consul_1:consul
+     - BARE_HOST=kafka3
     links:
-    - zookeeper:zookeeper
+     - zookeeper:zookeeper
+     - consul:consul
 
 heka:
+    extends:
+      file: base.yml
+      service: base
     image: qnib/heka
     hostname: heka
-    dns: 127.0.0.1
-    dns_search:
-    - node.consul
-    - service.consul
+    container_name: heka
     ports:
     - 14352:4352
     environment:
     - FORWARD_TO_HEKA=false
-    - DC_NAME=dc1
-    - BOOTSTRAP_CONSUL=false
-    - RUN_SERVER=false
     - SUPERVISOR_SKIP_SRV=heka
-    external_links:
-    - dockerhost_consul_1:consul
+    links:
+    - consul:consul
     volumes:
     - /Users/ckniep/docker/docker-heka/opt/qnib/heka/bin/:/opt/qnib/heka/bin/
     - ./heka/etc/:/etc/heka/
