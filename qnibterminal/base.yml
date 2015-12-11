@@ -126,6 +126,8 @@ consul:
   - DC_NAME=dc1
   - ENABLE_SYSLOG=true
   - CNT_TYPE=service
+  - RUN_SERVER=true
+  - BOOTSTRAP_CONSUL=true
   dns: 127.0.0.1
   hostname: consul
   privileged: true
