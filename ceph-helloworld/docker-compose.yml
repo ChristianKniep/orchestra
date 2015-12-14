@@ -22,8 +22,6 @@ ceph:
      - consul:consul
     ports:
      - 7480:7480
-    volumes:
-     - /Users/ckniep/docker/docker-ceph-mono/opt/qnib/ceph/bin/:/opt/qnib/ceph/bin/
 
 client:
     extends:
