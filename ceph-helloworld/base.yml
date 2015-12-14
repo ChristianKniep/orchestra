@@ -1,0 +1,9 @@
+base:
+    environment:
+     - DC_NAME=dc1
+     - COLLECT_METRICS=false
+    dns: 127.0.0.1
+    dns_search:
+     - node.consul
+     - service.consul
+    privileged: true
