@@ -30,8 +30,6 @@ client:
       file: base.yml
       service: base
     image: qnib/d-ceph-fuse
-    hostname: client
-    container_name: client
     links:
      - consul:consul
 
