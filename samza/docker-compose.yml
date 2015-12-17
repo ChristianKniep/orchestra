@@ -1,0 +1,116 @@
+consul:
+    extends:
+      file: base.yml
+      service: base
+    hostname: consul
+    container_name: consul
+    image: qnib/consul
+    environment:
+    - RUN_SERVER=true
+    - BOOTSTRAP_CONSUL=true
+    - FORWARD_TO_KAFKA=false
+    ports:
+    - "8500:8500"
+
+zkui:
+    extends:
+      file: base.yml
+      service: base
+    hostname: zkui
+    container_name: zkui
+    image: qnib/zkui
+    links:
+    - consul:consul
+    ports:
+    - 9090:9090
+
+zookeeper:
+    extends:
+      file: base.yml
+      service: base
+    hostname: zookeeper
+    container_name: zookeeper
+    image: qnib/zookeeper
+    links:
+    - consul:consul
+
+kafkaMonitor:
+    extends:
+      file: base.yml
+      service: base
+    image: qnib/kafka-monitor
+    hostname: kafka-monitor
+    container_name: kafka-monitor
+    links:
+    - consul:consul
+    - kafka0:kafka
+    ports:
+    - 8080:8080
+
+kafkaMgr:
+    extends:
+      file: base.yml
+      service: base
+    image: qnib/kafka-manager
+    hostname: kafka-manager
+    container_name: kafka-manager
+    environment:
+    - APPLICATION_SECRET=letmein
+    ports:
+    - 9000:9000
+    volumes:
+    - ./conf/:/kafka-manager-1.2.7/conf/
+    links:
+    - consul:consul
+    - zookeeper:zookeeper
+
+kafka0:
+    extends:
+      file: base.yml
+      service: kafka
+    hostname: kafka0
+    container_name: kafka0
+    environment:
+    - BARE_HOST=kafka0
+    - KAFKA_BOOTSTRAP_TOPICS=syslog,wikipedia-raw,wikipedia-edits,wikipedia-stats
+    links:
+    - consul:consul
+    - zookeeper:zookeeper
+
+kafka1:
+    extends:
+      file: base.yml
+      service: kafka
+    environment:
+    - BARE_HOST=kafka1
+    hostname: kafka1
+    container_name: kafka1
+    links:
+    - consul:consul
+    - zookeeper:zookeeper
+
+kafka2:
+    extends:
+      file: base.yml
+      service: kafka
+    hostname: kafka2
+    container_name: kafka2
+    environment:
+    - BARE_HOST=kafka2
+    links:
+    - consul:consul
+    - zookeeper:zookeeper
+
+samza:
+    extends:
+      file: base.yml
+      service: base
+    hostname: samza
+    container_name: samza
+    image: qnib/samza
+    links:
+    - consul:consul
+    ports:
+    - 8042:8042
+    - 8088:8088
+    - 50070:50070
