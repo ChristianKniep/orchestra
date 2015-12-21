@@ -30,3 +30,17 @@
 
 - name: ensure docker daemon is started
   service: name=docker state=started
+
+- name: check amount of servers
+  shell: /usr/local/bin/consul members |egrep -c "alive\s+server"
+  register: consul_members
+  
+- name: check for the global docker-network
+  shell: docker network ls
+  register: docker_network_ls
+  when: consul_members.stdout.find('2') != -1 or consul_members.stdout.find('3') != -1 
+
+- name: create docker network global
+  shell: docker network create -d overlay global
+  when: (consul_members.stdout.find('2') != -1 or consul_members.stdout.find('3') != -1) and
+        docker_network_ls.stdout.find('global') == -1
