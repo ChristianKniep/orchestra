@@ -1,0 +1,54 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+servers=[
+  {
+    :hostname => "docker1",
+    :ip => "192.168.100.10",
+    :box => "kaorimatz/centos-7.2-x86_64",
+    :ram => 1024,
+    :cpu => 1
+  },
+  {
+    :hostname => "docker2",
+    :ip => "192.168.100.11",
+    :box => "kaorimatz/centos-7.2-x86_64",
+    :ram => 1024,
+    :cpu => 1
+  },
+  {
+    :hostname => "docker3",
+    :ip => "192.168.100.12",
+    :box => "kaorimatz/centos-7.2-x86_64",
+    :ram => 1024,
+    :cpu => 1
+  }
+]
+
+Vagrant.configure(2) do |config|
+    config.vm.synced_folder ".", "/vagrant", disabled: true
+
+    servers.each do |machine|
+        config.vm.define machine[:hostname] do |node|
+            node.vm.box = machine[:box]
+            node.vm.hostname = machine[:hostname]
+            #node.vm.network "public_network", ip: machine[:ip], bridge: 'Thunderbolt Ethernet'
+            node.vm.network "private_network", ip: machine[:ip]
+            node.vm.provider "virtualbox" do |vb|
+                vb.customize ["modifyvm", :id, "--memory", machine[:ram]]
+                vb.name = machine[:hostname]
+                if (!machine[:hdd_name].nil?)
+                    unless File.exist?(machine[:hdd_name])
+                        vb.customize ["createhd", "--filename", machine[:hdd_name], "--size", machine[:hdd_size]]
+                    end
+                    vb.customize ["storageattach", :id, "--storagectl", "SATA", "--port", 1, "--device", 0, "--type", "hdd", "--medium", machine[:hdd_name]]
+                end
+            end
+        end
+		config.vm.provision "ansible" do |ansible|
+    		ansible.playbook = "provisioning/main.yml"
+  		end
+    end
+end

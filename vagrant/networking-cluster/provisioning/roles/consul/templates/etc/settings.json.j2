@@ -1,0 +1,19 @@
+{
+    "bootstrap_expect": 2,
+    "server": true,
+    "datacenter": "vagrant",
+    "data_dir": "/var/consul/",
+    "log_level": "INFO",
+    "enable_syslog": false,
+    "ui_dir": "/opt/consul-webui/",
+    "client_addr": "0.0.0.0",
+    "start_join": [
+		"192.168.100.10",
+		"192.168.100.11",
+		"192.168.100.12"
+	],
+    "advertise_addr": "{{ ansible_eth1.ipv4.address }}",
+    "advertise_addr_wan": "",
+    "recursor": "8.8.8.8",
+    "retry_max_wan": 3
+}

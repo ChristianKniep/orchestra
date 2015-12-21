@@ -1,0 +1,5 @@
+---
+# file: roles/common/tasks/main.yml
+
+- name: disable firewall
+  service: name=firewalld enabled=no state=stopped
