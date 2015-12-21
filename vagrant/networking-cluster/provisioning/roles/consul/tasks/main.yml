@@ -1,0 +1,22 @@
+---
+# file: roles/consul/tasks/main.yml
+
+- name: Put consul binary in place.
+  copy: src=bin/consul dest=/usr/local/bin/consul owner=root group=root mode=0755
+  tags: consul
+  
+- name: Put consul webui
+  copy: src=opt/consul-webui dest=/opt/ owner=root group=root
+
+- name: Create consul config-directory
+  file: path=/etc/consul.d state=directory mode=0755
+
+- name: Put server configuration file
+  template: src=etc/settings.json.j2 dest=/etc/consul.d/settings.json owner=root group=root mode=0644
+
+- name: Put consul init file
+  copy: src=init/consul.service dest=/etc/systemd/system/consul.service owner=root group=root mode=0755
+
+- name: Enable consul service
+  service: name=consul enabled=yes state=started
+  

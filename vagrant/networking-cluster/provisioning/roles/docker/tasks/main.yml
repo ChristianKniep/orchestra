@@ -1,0 +1,29 @@
+---
+# file: roles/docker/tasks/main.yml
+
+- name: Put docker repo in place.
+  copy: src=etc/yum.repos.d/docker.repo dest=/etc/yum.repos.d/docker.repo owner=root group=root mode=0644
+  tags: docker
+  
+- name: be sure docker-engine is installed
+  yum: name=docker-engine state=latest 
+  tags: docker
+  
+- name: Put docker-engine systemd-file
+  copy: src=systemd/docker.service dest=/usr/lib/systemd/system/docker.service owner=root group=root mode=0644
+
+- name: Put docker-engine environment file
+  copy: src=sysconfig/docker dest=/etc/sysconfig/docker owner=root group=root mode=0644
+
+- name: Check if reload of docker.service is needed
+  shell: systemctl status docker
+  register: systemctl_dockerstat
+  ignore_errors: True
+    
+- name: reload systemd daemons
+  shell: systemctl daemon-reload
+  when: systemctl_dockerstat|failed
+
+- name: restart docker daemon
+  service: name=docker state=restarted
+  when: systemctl_dockerstat|failed
