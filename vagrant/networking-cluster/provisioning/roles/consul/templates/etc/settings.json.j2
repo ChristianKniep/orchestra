@@ -7,11 +7,7 @@
     "enable_syslog": false,
     "ui_dir": "/opt/consul-webui/",
     "client_addr": "0.0.0.0",
-    "start_join": [
-		"192.168.100.10",
-		"192.168.100.11",
-		"192.168.100.12"
-	],
+    "start_join": [{% for host in servers %}{{"\n        "}}"{{ host['ip'] }}"{% if not loop.last %},{% endif %}{% endfor %}{{"\n    "}}],
     "advertise_addr": "{{ ansible_eth1.ipv4.address }}",
     "advertise_addr_wan": "",
     "recursor": "8.8.8.8",
