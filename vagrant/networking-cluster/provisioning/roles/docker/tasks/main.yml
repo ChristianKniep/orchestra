@@ -27,3 +27,6 @@
 - name: restart docker daemon
   service: name=docker state=restarted
   when: systemctl_dockerstat|failed
+
+- name: ensure docker daemon is started
+  service: name=docker state=started
