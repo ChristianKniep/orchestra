@@ -4,6 +4,7 @@ slurmctld:
     - "6817:6817"
     dns: 127.0.0.1
     hostname: slurmctld
+    container_name: slurmctld
     privileged: true
 
 slurmd:

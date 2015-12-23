@@ -1,11 +1,12 @@
 grafana2:
     hostname: grafana2
+    container_name: grafana2
     dns: 127.0.0.1
     image: qnib/grafana2
     environment:
      - DC_NAME=dc1
     external_links:
-     - carbonrelayng_carbon_1:consul
+     - carbon:consul
     ports:
      - 3000:3000
     privileged: true

@@ -8,6 +8,7 @@ grafana:
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: grafana
+  container_name: grafana
   privileged: true
 
 elasticsearch:
@@ -20,6 +21,7 @@ elasticsearch:
   - FORWARD_TO_LOGSTASH=true
   dns: 127.0.0.1
   hostname: elasticsearch
+  container_name: elasticsearch
   volumes:
   - /var/lib/elasticsearch
   privileged: true
@@ -34,6 +36,7 @@ kibana3:
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: kibana3
+  container_name: kibana3
   privileged: true
 
 kibana4:
@@ -45,7 +48,7 @@ kibana4:
   - FORWARD_TO_LOGSTASH=true
   - CNT_TYPE=service
   dns: 127.0.0.1
-  hostname: kibana4
+  container_name: kibana4
   privileged: true
 
 kopf: 
@@ -68,6 +71,7 @@ logger:
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: logger
+  container_name: logger
   privileged: true
 
 carbon:
@@ -82,6 +86,7 @@ carbon:
   - /var/lib/carbon/whisper/
   dns: 127.0.0.1
   hostname: carbon
+  container_name: carbon
   privileged: true
 
 gapi:
@@ -94,11 +99,13 @@ gapi:
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: graphite-api
+  container_name: graphite-api
   privileged: true
 
 neo4j:
   image: qnib/neo4j
   hostname: neo4j
+  container_name: neo4j
   ports:
   - 7474:7474
   environment:
@@ -116,6 +123,7 @@ inventory:
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: inventory
+  container_name: inventory
   privileged: true
 
 consul:
@@ -130,6 +138,7 @@ consul:
   - BOOTSTRAP_CONSUL=true
   dns: 127.0.0.1
   hostname: consul
+  container_name: consul
   privileged: true
 
 
@@ -147,6 +156,7 @@ slurmctld:
     - /var/www/slurm/
     dns: 127.0.0.1
     hostname: slurmctld
+    container_name: slurmctld
     privileged: true
 
 compute:
