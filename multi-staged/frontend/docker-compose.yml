@@ -9,9 +9,10 @@ grafana:
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: grafana
+  container_name: grafana
   external_links:
-   - consul_consul_1:consul
-   - middleware_gapi_1:gapi
+   - consul:consul
+   - gapi:gapi
   privileged: true
 
 kibana3:
@@ -25,15 +26,17 @@ kibana3:
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: kibana3
+  container_name: kibana3
   external_links:
-   - consul_consul_1:consul
-   - backend_elasticsearch_1:elasticsearch
+   - consul:consul
+   - elasticsearch:elasticsearch
   privileged: true
 
 kibana4:
   image: qnib/kibana4
   dns: 127.0.0.1
   hostname: kibana4
+  container_name: kibana4
   ports:
    - "5601:5601"
   environment:
@@ -42,12 +45,14 @@ kibana4:
   - COLLECT_METRICS=true
   - CNT_TYPE=service
   external_links:
-   - consul_consul_1:consul
-   - backend_elasticsearch_1:elasticsearch
+   - consul:consul
+   - elasticsearch:elasticsearch
   privileged: true
 
 kopf: 
   image: lmenezes/elasticsearch-kopf 
+  hostname: kopf
+  container_name: kopf
   ports: 
   - 8088:80 
   environment: 
@@ -55,5 +60,5 @@ kopf:
   - KOPF_SERVER_NAME=dockerhost 
   - KOPF_ES_SERVERS=172.17.42.1:9200
   external_links:
-   - consul_consul_1:consul
-   - backend_elasticsearch_1:elasticsearch
+   - consul:consul
+   - elasticsearch:elasticsearch

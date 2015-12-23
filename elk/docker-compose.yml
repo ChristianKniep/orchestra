@@ -14,6 +14,7 @@ elk:
   - FORWARD_TO_LOGSTASH=false
   dns: 127.0.0.1
   hostname: elk
+  container_name: elk
   volumes: 
    - /var/lib/elasticsearch
   privileged: true

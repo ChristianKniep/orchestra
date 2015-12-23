@@ -4,8 +4,11 @@ consul:
    - "8500:8500"
   environment:
   - DC_NAME=dc1
+  - RUN_SERVER=true
+  - BOOTSTRAP_CONSUL=true
   dns: 127.0.0.1
   hostname: consul
+  container_name: consul
   privileged: true
 
 carbon:
@@ -20,6 +23,7 @@ carbon:
      - COLLECT_METRICS=true
     dns: 127.0.0.1
     hostname: carbon
+    container_name: carbon
     volumes:
      - /var/lib/carbon/whisper/
     links:
@@ -27,6 +31,7 @@ carbon:
 
 gapi:
     hostname: graphite-api
+    container_name: graphite-api
     dns: 127.0.0.1
     image: qnib/graphite-api
     environment:
@@ -51,15 +56,17 @@ grafana:
      - COLLECT_METRICS=true
     dns: 127.0.0.1
     hostname: grafana
+    container_name: grafana
     links:
      - consul:consul
      - gapi:gapi
     privileged: true
 
-metrics:
+relay:
     image: qnib/carbon-relay-ng
     privileged: true
     hostname: carbon-relay-ng
+    container_name: carbon-relay-ng
     dns: 127.0.0.1
     ports:
      - 8081:8081

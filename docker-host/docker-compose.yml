@@ -1,5 +1,6 @@
 consul:
     hostname: consul
+    container_name: consul
     image: qnib/consul
     environment:
      - DC_NAME=dc1
@@ -11,6 +12,7 @@ consul:
     
 carbon:
     hostname: carbon
+    container_name: carbon
     image: qnib/carbon
     dns: 127.0.0.1
     environment:
@@ -25,6 +27,7 @@ carbon:
 
 gapi:
     hostname: graphite-api
+    container_name: graphite-api
     dns: 127.0.0.1
     image: qnib/graphite-api
     environment:
@@ -55,12 +58,14 @@ logger:
      - CNT_TYPE=service
     dns: 127.0.0.1
     hostname: logger
+    container_name: logger
     privileged: true
     
 elasticsearch:
     image: qnib/es-kopf
     dns: 127.0.0.1
     hostname: elasticsearch
+    container_name: elasticsearch
     environment:
     - DC_NAME=dc1
     - ES_CLUSTER_NAME=qnib2015
@@ -88,11 +93,13 @@ kibana3:
     - consul:consul
     dns: 127.0.0.1
     hostname: kibana3
+    container_name: kibana3
     privileged: true
 
 grafana:
     image: qnib/grafana
     hostname: grafana
+    container_name: grafana
     ports:
     - "8182:80"
     dns: 127.0.0.1
@@ -107,6 +114,7 @@ grafana:
 
 gweb:
     hostname: graphite-web
+    container_name: graphite-web
     dns: 127.0.0.1
     image: qnib/graphite-web
     environment:
@@ -126,6 +134,7 @@ mongodb:
     image: qnib/mongodb
     dns: 127.0.0.1
     hostname: mongodb
+    container_name: mongodb
     ports:
      - "27017:27017"
      - "28017:28017"
@@ -137,6 +146,7 @@ rocketchat:
     image: qnib/rocketchat
     dns: 127.0.0.1
     hostname: rocketchat
+    container_name: rocketchat
     ports:
      - "3000:3000"
     links:
@@ -151,6 +161,7 @@ hubot:
     image: qnib/hubot-rocketchat
     #dns: 127.0.0.1
     hostname: hubot
+    container_name: hubot
     links:
      - consul:consul
     environment:

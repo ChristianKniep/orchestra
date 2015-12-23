@@ -3,6 +3,7 @@ consul:
     ports:
      - "8500:8500"
     hostname: consul
+    container_name: consul
     dns: 127.0.0.1
     privileged: true
 
@@ -15,12 +16,14 @@ lb:
     - consul:consul
     dns: 127.0.0.1
     hostname: loadbalancer
+    container_name: loadbalancer
     environment:
      - SUPERVISOR_SRV_SYSLOG=nginx
 
 logstash:
     image: qnib/logger
     hostname: logger
+    container_name: logger
     privileged: true
     dns: 127.0.0.1
     ports:
@@ -48,6 +51,7 @@ elasticsearch:
     image: qnib/elasticsearch:1.7
     dns: 127.0.0.1
     hostname: elasticsearch
+    container_name: elasticsearch
     ports:
      - "9200:9200"
     environment:
@@ -77,6 +81,7 @@ kibana3:
   - HTTPPORT=9200
   dns: 127.0.0.1
   hostname: kibana3
+  container_name: kibana3
   privileged: true
   links:
   - consul:consul

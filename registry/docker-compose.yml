@@ -4,6 +4,8 @@ registry:
     - 5000:5000
     volumes:
     - /registry:/var/lib/registry
+    hostname: registry
+    container_name: registry
 
 HyperRegUI:
   image: hyper/docker-registry-web
@@ -13,6 +15,8 @@ HyperRegUI:
     - registry
   environment:
    REGISTRY_HOST: 192.168.99.100
+  hostname: reg-webui
+  container_name: reg-webui
 
 #kwkRegUI:
 #   image: konradkleine/docker-registry-frontend
