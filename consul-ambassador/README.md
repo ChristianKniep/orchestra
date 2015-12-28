@@ -120,3 +120,5 @@ For this I would love the client to advertise his WAN address `8.8.8.8`:
     }
 }
 ```
+	
+I opened an issue: https://github.com/hashicorp/consul/issues/1552
