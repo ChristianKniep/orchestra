@@ -1,5 +1,6 @@
 influxdb:
     hostname: influxdb
+    container_name: influxdb
     dns: 127.0.0.1
     image: qnib/influxdb
     volumes:
@@ -7,7 +8,7 @@ influxdb:
     environment:
      - DC_NAME=dc1
     external_links:
-     - carbonrelayng_consul_1:consul
+     - consul:consul
     ports:
      - 4242:4242
      - 8083:8083

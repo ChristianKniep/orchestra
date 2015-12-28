@@ -8,7 +8,7 @@ consul:
     - BOOTSTRAP_CONSUL=true
    ports:
     - "8500:8500"
-   container_name: "consul"
+   container_name: consul
    hostname: consul
 
 slurmctld:

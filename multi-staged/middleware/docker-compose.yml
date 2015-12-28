@@ -1,5 +1,6 @@
 gapi:
     hostname: graphite-api
+    container_name: graphite-api
     dns: 127.0.0.1
     image: qnib/graphite-api
     environment:
@@ -8,16 +9,17 @@ gapi:
     ports:
      - 8888:80
     external_links:
-     - consul_consul_1:consul
-     - backend_carbon_1:carbon
+     - consul:consul
+     - carbon:carbon
     volumes_from:
-     - backend_carbon_1
+     - carbon
     privileged: true
 
 logger:
   image: qnib/logger
   dns: 127.0.0.1
   hostname: logger
+  container_name: logger
   ports:
    - "5514:5514"
   environment:
@@ -26,6 +28,6 @@ logger:
   - COLLECT_METRICS=true
   - CNT_TYPE=service
   external_links:
-   - consul_consul_1:consul
-   - backend_elasticsearch_1:elasticsearch
+   - consul:consul
+   - elasticsearch:elasticsearch
   privileged: true
