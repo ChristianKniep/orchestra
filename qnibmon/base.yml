@@ -9,6 +9,7 @@ grafana:
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: grafana
+  container_name: grafana
   privileged: true
 
 elasticsearch:
@@ -21,6 +22,7 @@ elasticsearch:
   - COLLECT_METRICS=true
   dns: 127.0.0.1
   hostname: elasticsearch
+  container_name: elasticsearch
   volumes:
   - /var/lib/elasticsearch
   privileged: true
@@ -36,6 +38,7 @@ kibana3:
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: kibana3
+  container_name: kibana3
   privileged: true
 
 kibana4:
@@ -49,12 +52,15 @@ kibana4:
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: kibana4
+  container_name: kibana4
   privileged: true
 
 kopf: 
   image: lmenezes/elasticsearch-kopf 
   ports: 
   - 8088:80 
+  hostname: kopf
+  container_name: kopf
   environment: 
   - SERVICE_8088_NAME=es-kopf
   - KOPF_SERVER_NAME=dockerhost 
@@ -71,6 +77,7 @@ logger:
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: logger
+  container_name: logger
   privileged: true
 
 carbon:
@@ -86,6 +93,7 @@ carbon:
   - /var/lib/carbon/whisper/
   dns: 127.0.0.1
   hostname: carbon
+  container_name: carbon
   privileged: true
 
 gapi:
@@ -99,6 +107,7 @@ gapi:
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: graphite-api
+  container_name: graphite-api
   privileged: true
 
 consul:
@@ -112,14 +121,18 @@ consul:
   - CNT_TYPE=service
   dns: 127.0.0.1
   hostname: consul
+  container_name: consul
   privileged: true
 
 kafka:
     hostname: kafka
+    container_name: kafka
     dns: 127.0.0.1
     image: qnib/kafka
     environment:
     - DC_NAME=dc1
+    - RUN_SERVER=true
+    - BOOSTRAP_CONSUL=true
     - FORWARD_TO_KAFKA=true
     - FORWARD_TO_LOGSTASH=true
     ports:

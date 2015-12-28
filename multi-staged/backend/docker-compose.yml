@@ -1,5 +1,6 @@
 carbon:
     hostname: carbon
+    container_name: carbon
     image: qnib/carbon
     dns: 127.0.0.1
     environment:
@@ -7,7 +8,7 @@ carbon:
      - FORWARD_TO_LOGSTASH=false
      - SKIP_PSWATCH=true
     external_links:
-    - consul_consul_1:consul
+    - consul:consul
     ports:
      - 2003:2003
 
@@ -15,6 +16,7 @@ elasticsearch:
     image: qnib/es-kopf
     dns: 127.0.0.1
     hostname: elasticsearch
+    container_name: elasticsearch
     environment:
     - DC_NAME=dc1
     - ES_CLUSTER_NAME=qnib2015
@@ -26,5 +28,5 @@ elasticsearch:
     ports:
     - "9200:9200"
     external_links:
-    - consul_consul_1:consul
+    - consul:consul
     privileged: true

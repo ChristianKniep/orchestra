@@ -1,5 +1,7 @@
 consul:
    image: qnib/consul
+   hostname: consul
+   container_name: consul
    #dns: 127.0.0.1
    ports:
     - "8500:8500"
@@ -22,11 +24,14 @@ consul:
 registrator:
    image: gliderlabs/registrator:latest
    hostname: registrator
+   container_name: registrator
    volumes:
     - /var/run/docker.sock:/tmp/docker.sock
    
 vmConsul:
    image: qnib/consul
+   hostname: vmconsul
+   container_name: vmconsul
    #dns: 127.0.0.1
    ports:
     - "18500:8500"
