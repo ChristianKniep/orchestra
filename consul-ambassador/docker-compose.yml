@@ -1,0 +1,52 @@
+int0:
+  image: qnib/consul
+  ports:
+   - "8500"
+  net: global
+  environment:
+   - DC_NAME=int
+   - BOOTSTRAP_CONSUL=true
+   - RUN_SERVER=true
+  dns: 127.0.0.1
+  hostname: int0
+  container_name: int0
+
+int1:
+  image: qnib/consul
+  dns: 127.0.0.1
+  hostname: int1
+  container_name: int1
+  net: int
+  ports:
+   - "8500"
+  environment:
+   - DC_NAME=int
+   - CONSUL_CLUSTER_IPS=192.168.1.2
+
+int2:
+  image: qnib/consul
+  dns: 127.0.0.1
+  hostname: int2
+  container_name: int2
+  net: int
+  ports:
+   - "8500"
+  environment:
+   - DC_NAME=int
+   - CONSUL_CLUSTER_IPS=192.168.1.2
+   - CONSUL_ADDV_ADDR_WAN=8.8.8.8
+
+ext0:
+  image: qnib/consul
+  dns: 127.0.0.1
+  net: global
+  hostname: ext0
+  container_name: ext0
+  ports:
+   - "8500"
+  environment:
+   - DC_NAME=ext
+   - RUN_SERVER=true
+   - BOOTSTRAP_CONSUL=true
+   - WAN_SERVER=10.0.0.2
+
