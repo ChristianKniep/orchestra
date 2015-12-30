@@ -140,6 +140,6 @@ heka:
     links:
     - consul:consul
     volumes:
-    - /Users/ckniep/docker/docker-heka/opt/qnib/heka/bin/:/opt/qnib/heka/bin/
+    - ./opt/qnib/heka/bin/:/opt/qnib/heka/bin/
     - ./heka/etc/:/etc/heka/
     - ./heka/lua/:/usr/share/heka/lua/
