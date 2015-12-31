@@ -1,0 +1,75 @@
+consul:
+    image: qnib/consul
+    hostname: consul
+    container_name: consul
+    dns: 127.0.0.1
+    environment:
+    - DC_NAME=dc1
+    - CONSUL_BOOTSTRAP=true
+    ports:
+    - "8500:8500"
+
+redis:
+    image: qnib/redis
+    hostname: redis
+    container_name: redis
+    dns: 127.0.0.1
+    links:
+     - consul:consul
+    environment:
+    - DC_NAME=dc1
+    ports:
+    - "6379:6379"
+
+redis-commander:
+    image: qnib/redis-commander
+    hostname: redis-commander
+    container_name: redis-commander
+    dns: 127.0.0.1
+    links:
+     - consul:consul
+    environment:
+    - DC_NAME=dc1
+    ports:
+    - "8081:8081"
+
+rabbitmq:
+    image: qnib/rabbitmq
+    ports: 
+     - "55672:55672"
+     - "15672:15672"
+     - "5672:5672"
+    dns: 127.0.0.1
+    hostname: rabbitmq
+    container_name: rabbitmq
+    links:
+     - consul:consul
+    environment:
+     - RABBITMQ_VHOSTS=sensu:sensu:pass
+    privileged: true
+
+sensu:
+    image: qnib/sensu
+    hostname: sensu
+    container_name: sensu
+    ports: 
+     - "4567:4567"
+    dns: 127.0.0.1
+    environment:
+     - SENSU_SERVER=true
+     - SENSU_API=true
+     - SENSU_CLIENT=true
+    links:
+     - consul:consul
+    privileged: true
+
+uchiwa:
+    image: qnib/sensu-uchiwa
+    hostname: uchiwa
+    container_name: uchiwa
+    ports: 
+     - "3000:3000"
+    dns: 127.0.0.1
+    links:
+     - consul:consul
+    privileged: true
