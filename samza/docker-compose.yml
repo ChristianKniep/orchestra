@@ -43,7 +43,7 @@ kafkaMonitor:
     container_name: kafka-monitor
     links:
     - consul:consul
-    - kafka0:kafka
+    - kafka:kafka
     ports:
     - 8080:8080
 
@@ -64,39 +64,15 @@ kafkaMgr:
     - consul:consul
     - zookeeper:zookeeper
 
-kafka0:
+kafka:
     extends:
       file: base.yml
       service: kafka
-    hostname: kafka0
-    container_name: kafka0
+    hostname: kafka
+    container_name: kafka
     environment:
-    - BARE_HOST=kafka0
+    - BARE_HOST=kafka
     - KAFKA_BOOTSTRAP_TOPICS=syslog,wikipedia-raw,wikipedia-edits,wikipedia-stats
-    links:
-    - consul:consul
-    - zookeeper:zookeeper
-
-kafka1:
-    extends:
-      file: base.yml
-      service: kafka
-    environment:
-    - BARE_HOST=kafka1
-    hostname: kafka1
-    container_name: kafka1
-    links:
-    - consul:consul
-    - zookeeper:zookeeper
-
-kafka2:
-    extends:
-      file: base.yml
-      service: kafka
-    hostname: kafka2
-    container_name: kafka2
-    environment:
-    - BARE_HOST=kafka2
     links:
     - consul:consul
     - zookeeper:zookeeper
@@ -108,6 +84,8 @@ samza:
     hostname: samza
     container_name: samza
     image: qnib/samza
+    environment: 
+     - YARN_LOG_DIR=/data/hadoopdata/logs/
     links:
     - consul:consul
     ports:
