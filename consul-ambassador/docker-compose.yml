@@ -1,5 +1,5 @@
 int0:
-  image: qnib/consul
+  image: qnib/consul:wan
   ports:
    - "8500"
   net: global
@@ -12,7 +12,7 @@ int0:
   container_name: int0
 
 int1:
-  image: qnib/consul
+  image: qnib/consul:wan
   dns: 127.0.0.1
   hostname: int1
   container_name: int1
@@ -24,7 +24,7 @@ int1:
    - CONSUL_CLUSTER_IPS=192.168.1.2
 
 int2:
-  image: qnib/consul
+  image: qnib/consul:wan
   dns: 127.0.0.1
   hostname: int2
   container_name: int2
@@ -34,10 +34,11 @@ int2:
   environment:
    - DC_NAME=int
    - CONSUL_CLUSTER_IPS=192.168.1.2
+   - SUPERVISOR_SKIP_SRV=consul
    - CONSUL_ADDV_ADDR_WAN=8.8.8.8
 
 ext0:
-  image: qnib/consul
+  image: qnib/consul:wan
   dns: 127.0.0.1
   net: global
   hostname: ext0
