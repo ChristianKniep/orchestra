@@ -179,3 +179,37 @@ OpenJDK 64-Bit Server VM (build 24.79-b02, mixed mode)
 Consumed 17 messages
 [root@kafka /]#
 ```
+
+#### OpenJDK?
+Maybe the error is somehow related to the OpenJDK I'am using...
+```
+[root@samza container_1452777928552_0001_01_000001]# pwd
+/data/hadoopdata/logs/userlogs/application_1452777928552_0001/container_1452777928552_0001_01_000001
+[root@samza container_1452777928552_0001_01_000001]# cat stderr
+java version "1.7.0_79"
+OpenJDK Runtime Environment (fedora-2.5.5.0.fc20-x86_64 u79-b14)
+OpenJDK 64-Bit Server VM (build 24.79-b02, mixed mode)
+com.google.protobuf.InvalidProtocolBufferException: Protocol message contained an invalid tag (zero).
+	at com.google.protobuf.InvalidProtocolBufferException.invalidTag(InvalidProtocolBufferException.java:89)
+	at com.google.protobuf.CodedInputStream.readTag(CodedInputStream.java:108)
+	at org.apache.hadoop.yarn.proto.YarnSecurityTokenProtos$AMRMTokenIdentifierProto.<init>(YarnSecurityTokenProtos.java:1078)
+	at org.apache.hadoop.yarn.proto.YarnSecurityTokenProtos$AMRMTokenIdentifierProto.<init>(YarnSecurityTokenProtos.java:1042)
+	at org.apache.hadoop.yarn.proto.YarnSecurityTokenProtos$AMRMTokenIdentifierProto$1.parsePartialFrom(YarnSecurityTokenProtos.java:1138)
+	at org.apache.hadoop.yarn.proto.YarnSecurityTokenProtos$AMRMTokenIdentifierProto$1.parsePartialFrom(YarnSecurityTokenProtos.java:1133)
+	at com.google.protobuf.AbstractParser.parsePartialFrom(AbstractParser.java:200)
+	at com.google.protobuf.AbstractParser.parseFrom(AbstractParser.java:217)
+	at com.google.protobuf.AbstractParser.parseFrom(AbstractParser.java:223)
+	at com.google.protobuf.AbstractParser.parseFrom(AbstractParser.java:49)
+	at org.apache.hadoop.yarn.proto.YarnSecurityTokenProtos$AMRMTokenIdentifierProto.parseFrom(YarnSecurityTokenProtos.java:1307)
+	at org.apache.hadoop.yarn.security.AMRMTokenIdentifier.readFields(AMRMTokenIdentifier.java:81)
+	at org.apache.hadoop.security.token.Token.decodeIdentifier(Token.java:142)
+	at org.apache.samza.job.yarn.ContainerUtil.startContainer(ContainerUtil.java:181)
+	at org.apache.samza.job.yarn.ContainerUtil.runContainer(ContainerUtil.java:119)
+	at org.apache.samza.job.yarn.ContainerAllocator.run(ContainerAllocator.java:65)
+	at java.lang.Thread.run(Thread.java:745)
+Exception in thread "Container Allocator Thread" org.apache.samza.SamzaException: IO Exception when writing credentials to output buffer
+	at org.apache.samza.job.yarn.ContainerUtil.startContainer(ContainerUtil.java:190)
+	at org.apache.samza.job.yarn.ContainerUtil.runContainer(ContainerUtil.java:119)
+	at org.apache.samza.job.yarn.ContainerAllocator.run(ContainerAllocator.java:65)
+	at java.lang.Thread.run(Thread.java:745)
+```
