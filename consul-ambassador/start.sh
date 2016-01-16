@@ -20,28 +20,12 @@ else
     echo "[int] > already there (SUB: ${SUB})"
 fi
 echo "#### Start stack"
-echo "[server]        > docker-compose up -d server                  > Start"
+echo "[server]         > docker-compose up -d server                  > Start"
 docker-compose up -d server
-echo "[server]        > docker network connect global server         > Connect to global network"
-docker network connect global server
+echo "[server]         > docker network connect int server            > Connect to int network"
+docker network connect int server
 sleep 2
-echo "[server]        > docker exec -ti server  ip -o -4 addr        > Display ip addresses"
+echo "[server]         > docker exec -ti server  ip -o -4 addr        > Display ip addresses"
 docker exec -ti server  ip -o -4 addr
-echo "[client]        > docker-compose up -d client                  > Start"
-docker-compose up -d client
-echo "[load-balancer] > docker-compose up -d load-balancer           > Start"
-docker-compose up -d load-balancer
-echo "[load-balancer] > docker network connect global load-balancer  > Connect to global network"
-docker network connect global load-balancer
-sleep 5
-echo "[load-balancer] > docker exec -ti load-balancer  ip -o -4 addr > Display ip addresses"
-docker exec -ti load-balancer  ip -o -4 addr
-echo "[www1]    > docker-compose up -d www1                          > Start"
-docker-compose up -d www1
-echo "[www2]    > docker-compose up -d www2                          > Start"
-docker-compose up -d www2
-sleep 3
-echo "[client]    > docker-compose up -d client                      > Start"
-docker-compose up -d client
-echo "[CONSUL]  > docker exec -ti server consul members              > Show members of DC1"
-docker exec -ti server consul members
+echo "[ext0,int{1..3}] > docker-compose up -d ext0 int1 int2 int3     > Start"
+docker-compose up -d ext0  int1 int2 int3

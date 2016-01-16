@@ -22,7 +22,6 @@ int1:
   environment:
    - DC_NAME=dc1
    - CONSUL_CLUSTER_IPS=192.168.1.2
-   - CONSUL_ADDV_ADDR_WAN=10.0.0.2
 
 int2:
   image: qnib/consul:wan
@@ -36,6 +35,19 @@ int2:
    - DC_NAME=dc1
    - CONSUL_CLUSTER_IPS=192.168.1.2
    - CONSUL_ADDV_ADDR_WAN=8.8.8.8
+
+int3:
+  image: qnib/consul:wan
+  dns: 127.0.0.1
+  hostname: int3
+  container_name: int3
+  net: int
+  ports:
+   - "8500"
+  environment:
+   - DC_NAME=dc1
+   - CONSUL_CLUSTER_IPS=192.168.1.2
+   - CONSUL_ADDV_ADDR_WAN=10.0.0.2
 
 ext0:
   image: qnib/consul:wan
