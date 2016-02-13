@@ -124,6 +124,48 @@
         <git url="https://github.com/qnib/docker-fedora.git" />
       </materials>
     </pipeline>
+    <pipeline name="supervisor" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/ChristianKniep/docker-supervisor.git" />
+        <pipeline pipelineName="fedora_22" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="bats" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-bats.git" />
+        <pipeline pipelineName="supervisor" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="consul" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-consul.git" />
+        <pipeline pipelineName="bats" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="syslog" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-syslog.git" />
+        <pipeline pipelineName="consul" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="diamond" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-diamond.git" />
+        <pipeline pipelineName="sensu" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="terminal" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/ChristianKniep/docker-terminal.git" />
+        <pipeline pipelineName="diamond" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="sensu" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-sensu.git" />
+        <pipeline pipelineName="syslog" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
   </pipelines>
   <templates>
     <pipeline name="DockerBuild">
@@ -202,9 +244,6 @@ fi</value>
         <variable name="SKIP_BUILD_CHECK">
           <value>false</value>
         </variable>
-        <variable name="DOCKER_REG">
-          <value>docker-registry.service.consul</value>
-        </variable>
       </environmentvariables>
       <pipelines>
         <pipeline name="alpn-base" />
@@ -220,11 +259,18 @@ fi</value>
         <pipeline name="alpn-supervisior" />
         <pipeline name="alpn-syslog" />
         <pipeline name="alpn-terminal" />
+        <pipeline name="bats" />
+        <pipeline name="consul" />
         <pipeline name="d-consul" />
         <pipeline name="d-supervisor" />
+        <pipeline name="diamond" />
         <pipeline name="fedora_22" />
         <pipeline name="gocd-server" />
         <pipeline name="graphite-api" />
+        <pipeline name="sensu" />
+        <pipeline name="supervisor" />
+        <pipeline name="syslog" />
+        <pipeline name="terminal" />
       </pipelines>
     </environment>
     <environment name="edge">
