@@ -44,8 +44,11 @@ gocd-agent1:
     dns: 127.0.0.1
     environment:
      - DC_NAME=dc1
+     - GOCD_AGENT_AUTOENABLE_KEY="qnibterminalforthewin"
+     - GOCD_LOCAL_DOCKERENGINE=false
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
+    privileged: true
     links:
      - consul:consul
 
@@ -56,6 +59,9 @@ gocd-agent2:
     dns: 127.0.0.1
     environment:
      - DC_NAME=dc1
+     - GOCD_AGENT_AUTOENABLE_KEY="qnibterminalforthewin"
+     - GOCD_LOCAL_DOCKERENGINE=false
+    privileged: true
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
     links:
@@ -68,5 +74,10 @@ gocd-agent3:
     dns: 127.0.0.1
     environment:
      - DC_NAME=dc1
+     - GOCD_AGENT_AUTOENABLE_KEY="qnibterminalforthewin"
+     - GOCD_LOCAL_DOCKERENGINE=true
+    volumes:
+     - /Users/kniepbert/docker/alpn-gocd-agent/opt/qnib/gocd/helpers/imgcheck/:/opt/qnib/gocd/helpers/imgcheck/
     links:
      - consul:consul
+    privileged: true
