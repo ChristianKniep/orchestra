@@ -138,7 +138,7 @@
                     <key>script</key>
                     <value>set -x&#xD;
 IMG_NAME=$(echo ${GO_PIPELINE_NAME} |awk -F\_ '{print $1}')&#xD;
-docker build -t qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_TO_REVISION_GIT_REPOSITORY} .</value>
+docker build -t qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_PIPELINE_COUNTER} .</value>
                   </property>
                 </configuration>
                 <runif status="passed" />
@@ -150,7 +150,7 @@ docker build -t qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_TO_REVISION_GIT_REPOSITORY} 
                     <key>script</key>
                     <value>set -x&#xD;
 if [ "X${SKIP_BUILD_CHECK}" == "Xfalse" ];then&#xD;
-    /opt/qnib/gocd/helpers/imgcheck/imgcheck -tag ${DOCKER_TAG} -rev ${GO_TO_REVISION_GIT_REPOSITORY}&#xD;
+    /usr/local/bin/go-dckrimg check --tag ${DOCKER_TAG} --rev ${GO_PIPELINE_COUNTER}&#xD;
 fi</value>
                   </property>
                 </configuration>
@@ -162,7 +162,7 @@ fi</value>
                   <property>
                     <key>script</key>
                     <value>IMG_NAME=$(echo ${GO_PIPELINE_NAME} |awk -F\_ '{print $1}')&#xD;
-docker rmi qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_TO_REVISION_GIT_REPOSITORY}</value>
+docker rmi qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_PIPELINE_COUNTER}</value>
                   </property>
                 </configuration>
                 <runif status="failed" />
@@ -176,11 +176,11 @@ docker rmi qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_TO_REVISION_GIT_REPOSITORY}</valu
 &#xD;
 IMG_NAME=$(echo ${GO_PIPELINE_NAME} |awk -F\_ '{print $1}')&#xD;
 if [ "X${SKIP_BUILD_CHECK}" == "Xfalse" ];then&#xD;
-   docker tag -f qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_TO_REVISION_GIT_REPOSITORY} \&#xD;
+   docker tag -f qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_PIPELINE_COUNTER} \&#xD;
                         qnib/${IMG_NAME}:${DOCKER_TAG}&#xD;
 fi&#xD;
 if [ "X${DOCKER_REG}" != "X" ];then&#xD;
-    docker tag -f qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_TO_REVISION_GIT_REPOSITORY} ${DOCKER_REG}/qnib/${IMG_NAME}:${DOCKER_TAG}&#xD;
+    docker tag -f qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_PIPELINE_COUNTER} ${DOCKER_REG}/qnib/${IMG_NAME}:${DOCKER_TAG}&#xD;
     docker push ${DOCKER_REG}/qnib/${IMG_NAME}:${DOCKER_TAG}&#xD;
 fi</value>
                   </property>
