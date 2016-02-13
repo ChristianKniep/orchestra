@@ -136,8 +136,9 @@
                 <configuration>
                   <property>
                     <key>script</key>
-                    <value>IMG_NAME=$(echo ${GO_PIPELINE_NAME} |awk -F\_ '{print $1}')&#xD;
-docker build -t qnib/${IMG_NAME}:${DOCKER_TAG}_${GO_PIPELINE_COUNTER} .</value>
+                    <value>set -x&#xD;
+IMG_NAME=$(echo ${GO_PIPELINE_NAME} |awk -F\_ '{print $1}')&#xD;
+docker build -t qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_TO_REVISION_GIT_REPOSITORY} .</value>
                   </property>
                 </configuration>
                 <runif status="passed" />
@@ -147,8 +148,9 @@ docker build -t qnib/${IMG_NAME}:${DOCKER_TAG}_${GO_PIPELINE_COUNTER} .</value>
                 <configuration>
                   <property>
                     <key>script</key>
-                    <value>if [ "X${SKIP_BUILD_CHECK}" == "Xfalse" ];then&#xD;
-    /opt/qnib/gocd/helpers/imgcheck/imgcheck -tag ${DOCKER_TAG}&#xD;
+                    <value>set -x&#xD;
+if [ "X${SKIP_BUILD_CHECK}" == "Xfalse" ];then&#xD;
+    /opt/qnib/gocd/helpers/imgcheck/imgcheck -tag ${DOCKER_TAG} -rev ${GO_TO_REVISION_GIT_REPOSITORY}&#xD;
 fi</value>
                   </property>
                 </configuration>
@@ -160,7 +162,7 @@ fi</value>
                   <property>
                     <key>script</key>
                     <value>IMG_NAME=$(echo ${GO_PIPELINE_NAME} |awk -F\_ '{print $1}')&#xD;
-docker rmi qnib/${IMG_NAME}:${DOCKER_TAG}_${GO_PIPELINE_COUNTER}</value>
+docker rmi qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_TO_REVISION_GIT_REPOSITORY}</value>
                   </property>
                 </configuration>
                 <runif status="failed" />
@@ -170,12 +172,15 @@ docker rmi qnib/${IMG_NAME}:${DOCKER_TAG}_${GO_PIPELINE_COUNTER}</value>
                 <configuration>
                   <property>
                     <key>script</key>
-                    <value>IMG_NAME=$(echo ${GO_PIPELINE_NAME} |awk -F\_ '{print $1}')&#xD;
+                    <value>set -x&#xD;
+&#xD;
+IMG_NAME=$(echo ${GO_PIPELINE_NAME} |awk -F\_ '{print $1}')&#xD;
 if [ "X${SKIP_BUILD_CHECK}" == "Xfalse" ];then&#xD;
-   docker tag qnib/${IMG_NAME}:${DOCKER_TAG}_${GO_PIPELINE_COUNTER} qnib/${IMG_NAME}:${DOCKER_TAG}&#xD;
+   docker tag -f qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_TO_REVISION_GIT_REPOSITORY} \&#xD;
+                        qnib/${IMG_NAME}:${DOCKER_TAG}&#xD;
 fi&#xD;
 if [ "X${DOCKER_REG}" != "X" ];then&#xD;
-    docker tag qnib/${IMG_NAME}:${DOCKER_TAG}_${GO_PIPELINE_COUNTER} ${DOCKER_REG}/qnib/${IMG_NAME}:${DOCKER_TAG}&#xD;
+    docker tag -f qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_TO_REVISION_GIT_REPOSITORY} ${DOCKER_REG}/qnib/${IMG_NAME}:${DOCKER_TAG}&#xD;
     docker push ${DOCKER_REG}/qnib/${IMG_NAME}:${DOCKER_TAG}&#xD;
 fi</value>
                   </property>
