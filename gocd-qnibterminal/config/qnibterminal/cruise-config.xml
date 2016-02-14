@@ -123,6 +123,66 @@
         <pipeline pipelineName="d-supervisor" stageName="DockerBuild" materialName="ParentTrigger" />
       </materials>
     </pipeline>
+    <pipeline name="d-syslog" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/d-syslog.git" />
+        <pipeline pipelineName="d-consul" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="d-terminal" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/d-terminal.git" />
+        <pipeline pipelineName="d-syslog" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="d-node" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/d-node.git" />
+        <pipeline pipelineName="d-terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="rocketchat" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-rocketchat.git" />
+        <pipeline pipelineName="d-node" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="hubot-rocketchat" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-hubot-rocketchat.git" />
+        <pipeline pipelineName="d-node" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="d-java7" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/d-java7.git" />
+        <pipeline pipelineName="d-terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="d-hadoop" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/d-hadoop.git" />
+        <pipeline pipelineName="d-java7" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="d-yarn" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/d-yarn.git" />
+        <pipeline pipelineName="d-java7" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="ceph-base" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-ceph-base.git" />
+        <pipeline pipelineName="d-terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="ceph-mono" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-ceph-mono.git" />
+        <pipeline pipelineName="ceph-base" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
   </pipelines>
   <pipelines group="Fedora22">
     <pipeline name="fedora_22" isLocked="false" template="DockerBuild">
@@ -345,6 +405,54 @@
         <pipeline pipelineName="java8" stageName="DockerBuild" materialName="ParentTrigger" />
       </materials>
     </pipeline>
+    <pipeline name="flink" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-flink.git" />
+        <pipeline pipelineName="hadoop" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="logstash" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-logstash.git" />
+        <pipeline pipelineName="java8" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="logger" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/ChristianKniep/docker-logger.git" />
+        <pipeline pipelineName="logstash" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="nginx" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-nginx.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="rabbitmq" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-rabbitmq.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="redis" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/ChristianKniep/docker-redis.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="sensu-uchiwa" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-sensu-uchiwa.git" />
+        <pipeline pipelineName="d-node" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="neo4j" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-neo4j.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
   </pipelines>
   <pipelines group="Ubuntu_master">
     <pipeline name="u-supervisor" template="DockerBuild">
@@ -386,6 +494,18 @@
       <materials>
         <git url="https://github.com/qnib/docker-kafka-manager.git" />
         <pipeline pipelineName="u-java8" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="pxe" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/ChristianKniep/docker-pxe.git" />
+        <pipeline pipelineName="u-consul" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="graphite-web" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/ChristianKniep/docker-graphite-web.git" />
+        <pipeline pipelineName="u-terminal" stageName="DockerBuild" materialName="ParentTrigger" />
       </materials>
     </pipeline>
   </pipelines>
@@ -506,23 +626,34 @@ fi</value>
         <pipeline name="alpn-terminal" />
         <pipeline name="bats" />
         <pipeline name="carbon" />
+        <pipeline name="ceph-base" />
+        <pipeline name="ceph-mono" />
         <pipeline name="chronix" />
         <pipeline name="compute" />
         <pipeline name="consul" />
         <pipeline name="d-consul" />
+        <pipeline name="d-hadoop" />
+        <pipeline name="d-java7" />
+        <pipeline name="d-node" />
         <pipeline name="d-supervisor" />
+        <pipeline name="d-syslog" />
+        <pipeline name="d-terminal" />
+        <pipeline name="d-yarn" />
         <pipeline name="diamond" />
         <pipeline name="docker-registry" />
         <pipeline name="etcd" />
         <pipeline name="fedora_22" />
+        <pipeline name="flink" />
         <pipeline name="fullerite" />
         <pipeline name="gocd-server" />
         <pipeline name="grafana" />
         <pipeline name="grafana2" />
         <pipeline name="graphite-api" />
+        <pipeline name="graphite-web" />
         <pipeline name="hadoop" />
         <pipeline name="hbase" />
         <pipeline name="hpcg" />
+        <pipeline name="hubot-rocketchat" />
         <pipeline name="influxdb" />
         <pipeline name="java7" />
         <pipeline name="java8" />
@@ -533,11 +664,20 @@ fi</value>
         <pipeline name="kafka-monitor" />
         <pipeline name="kibana3" />
         <pipeline name="kibana4" />
+        <pipeline name="logger" />
+        <pipeline name="logstash" />
         <pipeline name="mongodb" />
+        <pipeline name="neo4j" />
+        <pipeline name="nginx" />
         <pipeline name="opentsdb" />
+        <pipeline name="pxe" />
         <pipeline name="qnibng" />
+        <pipeline name="rabbitmq" />
+        <pipeline name="redis" />
+        <pipeline name="rocketchat" />
         <pipeline name="samza" />
         <pipeline name="sensu" />
+        <pipeline name="sensu-uchiwa" />
         <pipeline name="slurm" />
         <pipeline name="slurmctld" />
         <pipeline name="slurmd" />
