@@ -51,3 +51,18 @@ gocd-agent1:
     privileged: true
     links:
      - consul:consul
+
+gocd-agent2:
+    hostname: gocd-agent2
+    container_name: gocd-agent2
+    image: qnib/alpn-gocd-agent
+    dns: 127.0.0.1
+    environment:
+     - DC_NAME=dc1
+     - GOCD_AGENT_AUTOENABLE_KEY="qnibterminalforthewin"
+     - GOCD_LOCAL_DOCKERENGINE=true
+    #volumes:
+    # - /var/run/docker.sock:/var/run/docker.sock
+    privileged: true
+    links:
+     - consul:consul

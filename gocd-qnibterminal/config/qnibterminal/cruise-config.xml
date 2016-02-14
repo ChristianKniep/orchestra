@@ -91,6 +91,12 @@
         <pipeline pipelineName="alpn-syslog" stageName="DockerBuild" materialName="ParentTrigger" />
       </materials>
     </pipeline>
+    <pipeline name="docker-registry" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-registry.git" />
+        <pipeline pipelineName="alpn-syslog" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
   </pipelines>
   <pipelines group="Alpine_edge">
     <pipeline name="alpn-base_edge" template="DockerBuild">
@@ -120,6 +126,11 @@
   </pipelines>
   <pipelines group="Fedora22">
     <pipeline name="fedora_22" isLocked="false" template="DockerBuild">
+      <environmentvariables>
+        <variable name="SKIP_DOCKER_REG">
+          <value>true</value>
+        </variable>
+      </environmentvariables>
       <materials>
         <git url="https://github.com/qnib/docker-fedora.git" />
       </materials>
@@ -166,6 +177,217 @@
         <pipeline pipelineName="syslog" stageName="DockerBuild" materialName="ParentTrigger" />
       </materials>
     </pipeline>
+    <pipeline name="slurm" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-slurm.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="slurmd" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-slurmd.git" />
+        <pipeline pipelineName="slurm" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="slurmctld" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-slurmctld.git" />
+        <pipeline pipelineName="slurm" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="hpcg" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-hpcg.git" />
+        <pipeline pipelineName="compute" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="compute" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/ChristianKniep/docker-compute.git" />
+        <pipeline pipelineName="slurmd" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="carbon" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/ChristianKniep/docker-carbon.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="grafana" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/ChristianKniep/docker-grafana.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="grafana2" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-grafana2.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="kibana3" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-kibana3.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="kibana4" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-kibana4.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="influxdb" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-influxdb.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="fullerite" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-fullerite.git" />
+        <pipeline pipelineName="consul" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="java7" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-java7.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="java8" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-java8.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="chronix" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-chronix.git" />
+        <pipeline pipelineName="java8" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="mongodb" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-mongodb.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="zookeeper" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-zookeeper.git" />
+        <pipeline pipelineName="java8" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="zkui" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-zkui.git" />
+        <pipeline pipelineName="java8" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="hadoop" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-hadoop.git" />
+        <pipeline pipelineName="java8" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="samza" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-samza.git" />
+        <pipeline pipelineName="hadoop" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="hbase" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-hbase.git" />
+        <pipeline pipelineName="hadoop" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="opentsdb" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-opentsdb.git" />
+        <pipeline pipelineName="hbase" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="jmxtrans7" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-jmxtrans7.git" />
+        <pipeline pipelineName="java7" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="kafka" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-kafka.git" />
+        <pipeline pipelineName="jmxtrans8" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="kafka-monitor" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-kafka-monitor.git" />
+        <pipeline pipelineName="java8" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="etcd" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/ChristianKniep/docker-etcd.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="qnibng" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/ChristianKniep/docker-qnibng.git" />
+        <pipeline pipelineName="terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="jmxtrans8" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-jmxtrans8.git" />
+        <pipeline pipelineName="java8" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+  </pipelines>
+  <pipelines group="Ubuntu_master">
+    <pipeline name="u-supervisor" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/u-supervisor.git" />
+      </materials>
+    </pipeline>
+    <pipeline name="u-consul" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/u-consul.git" />
+        <pipeline pipelineName="u-supervisor" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="u-syslog" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/u-syslog.git" />
+        <pipeline pipelineName="u-consul" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="u-terminal" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/u-terminal.git" />
+        <pipeline pipelineName="u-syslog" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="u-samza" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/u-samza.git" />
+        <pipeline pipelineName="u-terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="u-java8" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/u-java8.git" />
+        <pipeline pipelineName="u-terminal" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="kafka-manager" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/docker-kafka-manager.git" />
+        <pipeline pipelineName="u-java8" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
   </pipelines>
   <templates>
     <pipeline name="DockerBuild">
@@ -180,7 +402,27 @@
                     <key>script</key>
                     <value>set -x&#xD;
 IMG_NAME=$(echo ${GO_PIPELINE_NAME} |awk -F\_ '{print $1}')&#xD;
-docker build -t qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_PIPELINE_COUNTER} .</value>
+&#xD;
+echo "&gt;&gt;&gt;&gt; Add DOCKER_REG to Dockerfile"&#xD;
+REG_IMG_NAME=$(grep ^FROM Dockerfile | awk '{print $2}')&#xD;
+if [ $(echo ${REG_IMG_NAME} | grep -o "/" | wc -l) -gt 2 ];then&#xD;
+    echo "Sure you wanna add the registry? Looks not right: ${REG_IMG_NAME}"&#xD;
+elif [ $(echo ${REG_IMG_NAME} | grep -o "/" | wc -l) -eq 0 ];then&#xD;
+    echo "Image is an official one, so we skip it '${REG_IMG_NAME}'"&#xD;
+else&#xD;
+    if [ ! -z ${DOCKER_REG} ];then&#xD;
+        cat Dockerfile |sed -e "s;FROM.*;FROM ${DOCKER_REG}/${REG_IMG_NAME};" &gt; Dockerfile.new&#xD;
+        mv Dockerfile.new Dockerfile&#xD;
+        docker pull ${DOCKER_REG}/${REG_IMG_NAME}&#xD;
+     fi&#xD;
+fi&#xD;
+&#xD;
+echo "&gt;&gt;&gt;&gt; Build Dockerfile"&#xD;
+docker build -t qnib/${IMG_NAME}:${DOCKER_TAG}-${GO_PIPELINE_COUNTER} .&#xD;
+if [ -f Dockerfile.bkp ];then&#xD;
+    echo "&gt;&gt;&gt;&gt; Restore original"&#xD;
+    mv Dockerfile.bkp Dockerfile&#xD;
+fi</value>
                   </property>
                 </configuration>
                 <runif status="passed" />
@@ -244,6 +486,9 @@ fi</value>
         <variable name="SKIP_BUILD_CHECK">
           <value>false</value>
         </variable>
+        <variable name="DOCKER_REG">
+          <value>docker-registry.service.consul</value>
+        </variable>
       </environmentvariables>
       <pipelines>
         <pipeline name="alpn-base" />
@@ -260,17 +505,53 @@ fi</value>
         <pipeline name="alpn-syslog" />
         <pipeline name="alpn-terminal" />
         <pipeline name="bats" />
+        <pipeline name="carbon" />
+        <pipeline name="chronix" />
+        <pipeline name="compute" />
         <pipeline name="consul" />
         <pipeline name="d-consul" />
         <pipeline name="d-supervisor" />
         <pipeline name="diamond" />
+        <pipeline name="docker-registry" />
+        <pipeline name="etcd" />
         <pipeline name="fedora_22" />
+        <pipeline name="fullerite" />
         <pipeline name="gocd-server" />
+        <pipeline name="grafana" />
+        <pipeline name="grafana2" />
         <pipeline name="graphite-api" />
+        <pipeline name="hadoop" />
+        <pipeline name="hbase" />
+        <pipeline name="hpcg" />
+        <pipeline name="influxdb" />
+        <pipeline name="java7" />
+        <pipeline name="java8" />
+        <pipeline name="jmxtrans7" />
+        <pipeline name="jmxtrans8" />
+        <pipeline name="kafka" />
+        <pipeline name="kafka-manager" />
+        <pipeline name="kafka-monitor" />
+        <pipeline name="kibana3" />
+        <pipeline name="kibana4" />
+        <pipeline name="mongodb" />
+        <pipeline name="opentsdb" />
+        <pipeline name="qnibng" />
+        <pipeline name="samza" />
         <pipeline name="sensu" />
+        <pipeline name="slurm" />
+        <pipeline name="slurmctld" />
+        <pipeline name="slurmd" />
         <pipeline name="supervisor" />
         <pipeline name="syslog" />
         <pipeline name="terminal" />
+        <pipeline name="u-consul" />
+        <pipeline name="u-java8" />
+        <pipeline name="u-samza" />
+        <pipeline name="u-supervisor" />
+        <pipeline name="u-syslog" />
+        <pipeline name="u-terminal" />
+        <pipeline name="zkui" />
+        <pipeline name="zookeeper" />
       </pipelines>
     </environment>
     <environment name="edge">
