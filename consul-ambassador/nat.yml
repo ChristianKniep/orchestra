@@ -1,0 +1,57 @@
+server:
+  image: qnib/consul:wan
+  dns: 127.0.0.1
+  net: int
+  ports:
+   - "8500"
+  environment:
+   - DC_NAME=DC1
+   - BOOTSTRAP_CONSUL=true
+   - RUN_SERVER=true
+   - CONSUL_ADDV_ADDR_WAN=10.0.0.2
+   - CONSUL_TRANSLATE_WAN=true
+  hostname: server
+  container_name: server
+
+load-balancer:
+  extends:
+    file: base.yml
+    service: www
+  hostname: load-balancer
+  container_name: load-balancer
+  environment:
+   - CONSUL_CLUSTER_IPS=192.168.1.2
+   - CONSUL_CLUSTER_SKIP_TEST=true
+
+www1:
+  extends:
+    file: base.yml
+    service: www
+  hostname: www1
+  container_name: www1
+  environment:
+   - CONSUL_CLUSTER_IPS=192.168.1.2
+   - CONSUL_ADDV_ADDR_WAN=10.0.0.3
+   - CONSUL_CLUSTER_SKIP_TEST=true
+
+www2:
+  extends:
+    file: base.yml
+    service: www
+  hostname: www2
+  container_name: www2
+  environment:
+   - CONSUL_CLUSTER_IPS=192.168.1.2
+   - CONSUL_ADDV_ADDR_WAN=10.0.0.3
+   - CONSUL_CLUSTER_SKIP_TEST=true
+
+client:
+  image: ubuntu
+  dns: 
+   - 10.0.0.2
+   - 8.8.8.8
+  net: global
+  hostname: client
+  container_name: client
+  command: tail -f /dev/null
+

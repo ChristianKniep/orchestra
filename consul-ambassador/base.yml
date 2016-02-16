@@ -1,0 +1,6 @@
+www:
+  image: qnib/consul
+  dns: 127.0.0.1
+  net: int
+  environment:
+   - DC_NAME=DC1

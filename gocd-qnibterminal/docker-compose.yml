@@ -1,0 +1,68 @@
+consul:
+    image: qnib/alpn-consul
+    hostname: consul
+    container_name: consul
+    dns: 127.0.0.1
+    ports:
+     - 8500
+    environment:
+     - DC_NAME=dc1
+     - CONSUL_BOOTSTRAP=true
+
+registry:
+    hostname: registry
+    container_name: registry
+    image: qnib/registry
+    dns: 127.0.0.1
+    ports:
+     - 80
+    environment:
+     - DC_NAME=dc1
+    volumes:
+     - ~/.docker/registry/:/var/lib/registry/
+    links:
+     - consul:consul
+
+gocd-server:
+    hostname: gocd-server
+    container_name: gocd-server
+    image: qnib/gocd-server
+    dns: 127.0.0.1
+    ports:
+     - 8153
+    environment:
+     - DC_NAME=dc1
+    volumes:
+     - ./config/qnibterminal/:/opt/go-server/config/
+    links:
+     - consul:consul
+
+gocd-agent1:
+    hostname: gocd-agent1
+    container_name: gocd-agent1
+    image: qnib/alpn-gocd-agent
+    dns: 127.0.0.1
+    environment:
+     - DC_NAME=dc1
+     - GOCD_AGENT_AUTOENABLE_KEY="qnibterminalforthewin"
+     - GOCD_LOCAL_DOCKERENGINE=true
+    #volumes:
+    # - /var/run/docker.sock:/var/run/docker.sock
+    privileged: true
+    links:
+     - consul:consul
+
+gocd-agent2:
+    hostname: gocd-agent2
+    container_name: gocd-agent2
+    image: qnib/alpn-gocd-agent
+    dns: 127.0.0.1
+    environment:
+     - DC_NAME=dc1
+     - GOCD_AGENT_AUTOENABLE_KEY="qnibterminalforthewin"
+     - GOCD_LOCAL_DOCKERENGINE=true
+    #volumes:
+    # - /var/run/docker.sock:/var/run/docker.sock
+    privileged: true
+    links:
+     - consul:consul
