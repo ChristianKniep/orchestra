@@ -1,20 +1,18 @@
 consul:
-    image: qnib/consul
+    image: qnib/alpn-consul
     ports:
-     - "8500:8500"
+     - "8500"
     environment:
      - RUN_SERVER=true
      - BOOTSTRAP_CONSUL=true
     hostname: consul
-    container_name: consul
     dns: 127.0.0.1
     privileged: true
 
 terminal:
-    image: qnib/terminal
+    image: qnib/alpn-terminal
     dns: 127.0.0.1
     hostname: terminal
-    container_name: terminal
     links:
      - consul:consul
     privileged: true

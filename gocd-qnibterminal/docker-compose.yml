@@ -9,6 +9,17 @@ consul:
      - DC_NAME=dc1
      - CONSUL_BOOTSTRAP=true
 
+openldap:
+    image: qnib/openldap
+    dns: 127.0.0.1
+    hostname: openldap
+    container_name: openldap
+    environment:
+     - DC_NAME=dc1
+    links:
+     - consul:consul
+    privileged: true
+
 registry:
     hostname: registry
     container_name: registry

@@ -1,9 +1,9 @@
-consul:
-    image: qnib/consul
+rc-consul:
+    image: qnib/alpn-consul
     ports:
      - "8500:8500"
-    hostname: consul
-    container_name: consul
+    hostname: rc-consul
+    container_name: rc-consul
     dns: 127.0.0.1
     privileged: true
     environment:
@@ -19,7 +19,7 @@ mongodb:
      - "27017:27017"
      - "28017:28017"
     links:
-     - consul:consul
+     - rc-consul:consul
     privileged: true
     environment:
      - MONGO_RESTORE=/backup/rocketchat_init.tar
@@ -33,7 +33,7 @@ rocketchat:
     ports:
      - "3000:3000"
     links:
-     - consul:consul
+     - rc-consul:consul
      - mongodb:db
     environment:
      - COLLECT_METRICS=true
@@ -48,7 +48,7 @@ hubot:
     hostname: hubot
     container_name: hubot
     links:
-     - consul:consul
+     - rc-consul:consul
     environment:
     - RUN_SERVER=false
     - BOOTSTRAP_CONSUL=false
@@ -75,7 +75,7 @@ carbon:
     volumes:
      - /var/lib/carbon/whisper/
     links:
-     - consul:consul
+     - rc-consul:consul
 
 gapi:
     hostname: graphite-api
@@ -89,7 +89,7 @@ gapi:
     ports:
      - 8888:80
     links:
-     - consul:consul
+     - rc-consul:consul
      - carbon:carbon
     volumes_from:
      - carbon
@@ -106,5 +106,5 @@ grafana:
     hostname: grafana
     container_name: grafana
     links:
-     - consul:consul
+     - rc-consul:consul
      - gapi:gapi

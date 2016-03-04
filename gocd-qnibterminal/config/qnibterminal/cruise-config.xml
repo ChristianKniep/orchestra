@@ -7,16 +7,10 @@
         <git url="https://github.com/qnib/alpn-base.git" materialName="git-repository" />
       </materials>
     </pipeline>
-    <pipeline name="alpn-supervisior" template="DockerBuild">
-      <materials>
-        <git url="https://github.com/qnib/alpn-supervisor.git" />
-        <pipeline pipelineName="alpn-base" stageName="DockerBuild" materialName="ParentTrigger" />
-      </materials>
-    </pipeline>
     <pipeline name="alpn-consul" template="DockerBuild">
       <materials>
         <git url="https://github.com/qnib/alpn-consul.git" />
-        <pipeline pipelineName="alpn-supervisior" stageName="DockerBuild" materialName="ParentTrigger" />
+        <pipeline pipelineName="alpn-supervisor" stageName="DockerBuild" materialName="ParentTrigger" />
       </materials>
     </pipeline>
     <pipeline name="alpn-syslog" template="DockerBuild">
@@ -95,6 +89,12 @@
       <materials>
         <git url="https://github.com/qnib/docker-registry.git" />
         <pipeline pipelineName="alpn-syslog" stageName="DockerBuild" materialName="ParentTrigger" />
+      </materials>
+    </pipeline>
+    <pipeline name="alpn-supervisor" template="DockerBuild">
+      <materials>
+        <git url="https://github.com/qnib/alpn-supervisor.git" />
+        <pipeline pipelineName="alpn-base" stageName="DockerBuild" materialName="ParentTrigger" />
       </materials>
     </pipeline>
   </pipelines>
@@ -604,7 +604,7 @@ fi</value>
           <value>latest</value>
         </variable>
         <variable name="SKIP_BUILD_CHECK">
-          <value>false</value>
+          <value>true</value>
         </variable>
         <variable name="DOCKER_REG">
           <value>docker-registry.service.consul</value>
@@ -621,7 +621,7 @@ fi</value>
         <pipeline name="alpn-jre8" />
         <pipeline name="alpn-openmpi" />
         <pipeline name="alpn-osu-micro-benchmarks" />
-        <pipeline name="alpn-supervisior" />
+        <pipeline name="alpn-supervisor" />
         <pipeline name="alpn-syslog" />
         <pipeline name="alpn-terminal" />
         <pipeline name="bats" />
