@@ -1,0 +1,8 @@
+owncloud:
+    image: qnib/owncloud
+    hostname: owncloud
+    container_name: owncloud
+    ports:
+     - 443:443
+    environment:
+     - OC_UID=501
