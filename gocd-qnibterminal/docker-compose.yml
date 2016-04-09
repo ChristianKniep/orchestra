@@ -20,6 +20,18 @@ openldap:
      - consul:consul
     privileged: true
 
+registry-web:
+    hostname: registry-web
+    container_name: registry-web
+    image: qnib/registry-web
+    dns: 127.0.0.1
+    ports:
+     - 8080
+    environment:
+     - DC_NAME=dc1
+    links:
+     - consul:consul
+
 registry:
     hostname: registry
     container_name: registry
